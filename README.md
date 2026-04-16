@@ -2,8 +2,8 @@
 
 A free, fully customizable **maintenance / under-construction page** plugin for WordPress. No paywalls, no locked templates — everything is customizable right from your WordPress dashboard.
 
-![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue?logo=wordpress)
-![PHP](https://img.shields.io/badge/PHP-8.0%2B-purple?logo=php)
+![WordPress](https://img.shields.io/badge/WordPress-6.9%2B-blue?logo=wordpress)
+![PHP](https://img.shields.io/badge/PHP-8.3%2B-purple?logo=php)
 ![License](https://img.shields.io/badge/License-GPL--2.0%2B-green)
 ![Version](https://img.shields.io/badge/Version-1.0.0-orange)
 
