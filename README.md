@@ -105,18 +105,6 @@ kwl-maintenance/
 
 ---
 
-## 🛣️ Roadmap / Ideas for v2
-
-- [ ] Custom logo upload (replace the wrench icon)
-- [ ] Countdown timer with target launch date
-- [ ] Email capture / "Notify me on launch" form
-- [ ] Additional social links (Instagram, Twitter/X, LinkedIn)
-- [ ] Custom background image upload
-- [ ] Google Analytics / tracking ID field
-- [ ] Self-hosted Font Awesome for GDPR compliance
-- [ ] WordPress.org plugin directory submission
-
----
 
 ## 🤝 Contributing
 
