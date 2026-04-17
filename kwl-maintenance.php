@@ -5,6 +5,7 @@
  * Description: A fully customizable maintenance/under-construction page with two built-in templates — a branded business style and a personal/portfolio style. Customize everything from the WordPress dashboard.
  * Version:     2.0.0
  * Author:      Ken Weill
+ * Author URI:  https://github.com/kenweill
  * License:     GPL-2.0+
  */
 
