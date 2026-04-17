@@ -3,7 +3,7 @@
  * Plugin Name: KWL Maintenance Mode
  * Plugin URI:  https://github.com/kenweill/kwl-maintenance-mode
  * Description: A fully customizable maintenance/under-construction page with two built-in templates — a branded business style and a personal/portfolio style. Customize everything from the WordPress dashboard.
- * Version:     2.0.0
+ * Version:     2.0.1
  * Author:      Ken Weill
  * Author URI:  https://github.com/kenweill
  * License:     GPL-2.0+
@@ -11,7 +11,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'KWL_MAINT_VERSION', '2.0.0' );
+define( 'KWL_MAINT_VERSION', '2.0.1' );
 define( 'KWL_MAINT_OPTIONS', 'kwl_maintenance_options' );
 
 /* ---------------------------------------------------------------
