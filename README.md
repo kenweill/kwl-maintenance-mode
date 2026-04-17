@@ -29,9 +29,7 @@ A free, fully customizable **maintenance / under-construction page** plugin for 
 ### Maintenance Page (Visitor View)
 > Clean, modern card design with animated progress bar, contact links, and your branding.
 
-```
 ![KWL Maintenance Page](https://github.com/user-attachments/assets/be770fc4-9e88-420f-9a66-abd5774444d4)
-```
 
 ### Admin Settings Panel
 > Tabbed settings page with toggle switch, color pickers, range slider, and preview button.
