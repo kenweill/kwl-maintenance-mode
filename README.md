@@ -30,19 +30,7 @@ A free, fully customizable **maintenance / under-construction page** plugin for 
 > Clean, modern card design with animated progress bar, contact links, and your branding.
 
 ```
-┌─────────────────────────────────────┐
-│           🔧                        │
-│         KWL Hub                     │
-│  ┌───────────────────────────────┐  │
-│  │ 🪖 We're building something   │  │
-│  │    great! Check back soon.    │  │
-│  └───────────────────────────────┘  │
-│  ⏳ Estimated completion: in progress│
-│  ████████████████░░░░░░  68%        │
-│  🔄 Our team is setting things up   │
-│                                     │
-│  ✉ Support  🔄 Check  👍 Updates   │
-└─────────────────────────────────────┘
+![KWL Hub Maintenance Page](https://kwlhub.com/wp-content/uploads/2026/04/KWL-Hub-Maintenance-Page.png)
 ```
 
 ### Admin Settings Panel
