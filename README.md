@@ -30,7 +30,7 @@ A free, fully customizable **maintenance / under-construction page** plugin for 
 > Clean, modern card design with animated progress bar, contact links, and your branding.
 
 ```
-<img width="1920" height="953" alt="KWL Hub Maintenance Page" src="https://github.com/user-attachments/assets/be770fc4-9e88-420f-9a66-abd5774444d4" />
+![KWL Maintenance Page](https://github.com/user-attachments/assets/be770fc4-9e88-420f-9a66-abd5774444d4)
 ```
 
 ### Admin Settings Panel
