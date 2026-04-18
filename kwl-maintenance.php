@@ -3,7 +3,7 @@
  * Plugin Name: KWL Maintenance Mode
  * Plugin URI:  https://github.com/kenweill/kwl-maintenance-mode
  * Description: A fully customizable maintenance/under-construction page with two built-in templates — a branded business style and a personal/portfolio style. Customize everything from the WordPress dashboard.
- * Version:     2.0.1
+ * Version:     2.0.2
  * Author:      Ken Weill
  * Author URI:  https://github.com/kenweill
  * License:     GPL-2.0+
@@ -11,7 +11,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'KWL_MAINT_VERSION', '2.0.1' );
+define( 'KWL_MAINT_VERSION', '2.0.2' );
 define( 'KWL_MAINT_OPTIONS', 'kwl_maintenance_options' );
 
 /* ---------------------------------------------------------------
@@ -660,7 +660,15 @@ add_action('template_redirect', function() {
         }
     }
 
-    if ( is_admin() || $GLOBALS['pagenow'] === 'wp-login.php' ) return;
+    // Bypass admin and the WP login page.
+    // Also check raw REQUEST_URI for wp-login.php — needed when Loginizer (or a
+    // similar plugin) renames the login URL. The original /wp-login.php becomes a
+    // 404 that skips $GLOBALS['pagenow'] detection but still fires template_redirect,
+    // causing the theme 404 to show instead of the maintenance page.
+    $request_path = isset( $_SERVER['REQUEST_URI'] )
+        ? strtolower( parse_url( sanitize_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH ) )
+        : '';
+    if ( is_admin() || $GLOBALS['pagenow'] === 'wp-login.php' || substr( $request_path, -12 ) === 'wp-login.php' ) return;
 
     if ( $opts['template'] === 'portfolio' ) {
         kwl_maint_render_portfolio($opts);
