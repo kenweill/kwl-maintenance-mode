@@ -3,7 +3,7 @@ Contributors: Ken Weill
 Tags: maintenance, under construction, coming soon
 Requires at least: 6.0
 Tested up to: 6.9.4
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 License: GPL-2.0+
 
 A fully customizable maintenance/under-construction page with two built-in templates.
@@ -35,6 +35,12 @@ Customize everything:
 4. Pick a template, customize, then toggle maintenance mode ON
 
 == Changelog ==
+
+= 2.0.3 =
+* Bug fix: Portfolio template admin preview card was showing hardcoded "kenweill.com",
+  "Ken Weill", and static subheading/button text instead of the saved settings values.
+  The preview card now reflects your actual saved site name, name badge, subheading,
+  and custom link label.
 
 = 2.0.2 =
 * Bug fix: /wp-login.php now correctly shows the maintenance page when Loginizer

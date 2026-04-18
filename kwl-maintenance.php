@@ -3,7 +3,7 @@
  * Plugin Name: KWL Maintenance Mode
  * Plugin URI:  https://github.com/kenweill/kwl-maintenance-mode
  * Description: A fully customizable maintenance/under-construction page with two built-in templates — a branded business style and a personal/portfolio style. Customize everything from the WordPress dashboard.
- * Version:     2.0.2
+ * Version:     2.0.3
  * Author:      Ken Weill
  * Author URI:  https://github.com/kenweill
  * License:     GPL-2.0+
@@ -11,7 +11,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'KWL_MAINT_VERSION', '2.0.2' );
+define( 'KWL_MAINT_VERSION', '2.0.3' );
 define( 'KWL_MAINT_OPTIONS', 'kwl_maintenance_options' );
 
 /* ---------------------------------------------------------------
@@ -221,10 +221,10 @@ function kwl_maint_settings_page() {
                     <label class="kwl-template-card <?php echo $tpl === 'portfolio' ? 'selected' : ''; ?>">
                         <input type="radio" name="<?php echo KWL_MAINT_OPTIONS; ?>[template]" value="portfolio" <?php checked($tpl,'portfolio'); ?>>
                         <div class="kwl-tpl-preview portfolio-preview">
-                            <div class="tpl-badge">Ken Weill</div>
-                            <div class="tpl-name">kenweill.com</div>
-                            <div class="tpl-subhead">— thoughtfully curated —</div>
-                            <div class="tpl-resume-btn">View resume →</div>
+                            <div class="tpl-badge"><?php echo esc_html( $opts['portfolio_name_badge'] ); ?></div>
+                            <div class="tpl-name"><?php echo esc_html( $opts['site_name'] ); ?></div>
+                            <div class="tpl-subhead"><?php echo esc_html( $opts['portfolio_subhead'] ); ?></div>
+                            <div class="tpl-resume-btn"><?php echo esc_html( $opts['custom_link_label'] ); ?></div>
                         </div>
                         <span class="kwl-tpl-label">Personal / Portfolio</span>
                         <span class="kwl-tpl-desc">Best for personal sites. Adds a name badge, subheading, and a prominent resume/link button.</span>
