@@ -3,7 +3,7 @@ Contributors: Ken Weill
 Tags: maintenance, under construction, coming soon
 Requires at least: 6.0
 Tested up to: 6.9.4
-Stable tag: 2.0.0
+Stable tag: 2.0.2
 License: GPL-2.0+
 
 A fully customizable maintenance/under-construction page with two built-in templates.
@@ -35,6 +35,15 @@ Customize everything:
 4. Pick a template, customize, then toggle maintenance mode ON
 
 == Changelog ==
+
+= 2.0.2 =
+* Bug fix: /wp-login.php now correctly shows the maintenance page when Loginizer
+  (or any login-rename plugin) is active. Previously, the renamed login page caused
+  wp-login.php to become a 404 that bypassed the maintenance intercept and showed
+  the theme's 404 template instead.
+
+= 2.0.1 =
+* Added Author URI
 
 = 2.0.0 =
 * Added Portfolio / Personal template
