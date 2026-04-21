@@ -3,7 +3,7 @@ Contributors: Ken Weill
 Tags: maintenance, under construction, coming soon
 Requires at least: 6.0
 Tested up to: 6.9.4
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPL-2.0+
 
 A fully customizable maintenance/under-construction page with two built-in templates.
@@ -43,6 +43,14 @@ and offline use.
 4. Pick a mode, pick a template, customize, done
 
 == Changelog ==
+
+= 2.1.1 =
+* Bug fix: Admin tab panels (General, Business Content, etc.) were all visible
+  at once — missing CSS rule causing tabs to not hide/show correctly
+* Bug fix: Page icon was not rendering — CSS still targeted old <i> tags from
+  Font Awesome instead of the new self-hosted <span> elements
+* Bug fix: Icon color CSS variable mismatch (--icon vs --icon-color) causing
+  the icon to appear with no color
 
 = 2.1.0 =
 * New: Three-way site mode selector — Off, Coming Soon (200 OK), Maintenance (503)

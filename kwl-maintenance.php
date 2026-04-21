@@ -3,7 +3,7 @@
  * Plugin Name: KWL Maintenance Mode
  * Plugin URI:  https://github.com/kenweill/kwl-maintenance-mode
  * Description: A fully customizable maintenance/under-construction page with two built-in templates — a branded business style and a personal/portfolio style. Customize everything from the WordPress dashboard.
- * Version:     2.1.0
+ * Version:     2.1.1
  * Author:      Ken Weill
  * Author URI:  https://github.com/kenweill
  * License:     GPL-2.0+
@@ -11,7 +11,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'KWL_MAINT_VERSION', '2.1.0' );
+define( 'KWL_MAINT_VERSION', '2.1.1' );
 define( 'KWL_MAINT_OPTIONS', 'kwl_maintenance_options' );
 
 /* ---------------------------------------------------------------
@@ -593,6 +593,8 @@ function kwl_maint_admin_styles() { ?>
 .kwl-tab:hover { background:#f5f5f5; color:#1d2327; }
 .kwl-tab.active { background:#fff; color:#2271b1; border-bottom-color:#2271b1; border:1px solid #e0e0e0; border-bottom:2px solid #fff; }
 .kwl-tab.dimmed { opacity:.5; }
+.kwl-panel { display:none; }
+.kwl-panel.active { display:block; }
 
 /* Cards */
 .kwl-card { background:#fff; border:1px solid #e0e0e0; border-radius:8px; padding:20px 24px; margin-bottom:16px; }
@@ -801,8 +803,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .maintenance-card{max-width:620px;width:100%;background:var(--card-bg);border-radius:48px;box-shadow:0 25px 45px -12px rgba(0,0,0,.2),0 4px 12px rgba(0,0,0,.03),inset 0 1px 0 rgba(255,255,255,.8);padding:2.5rem 2rem 3rem;text-align:center;transition:transform .25s ease,box-shadow .3s ease;border:1px solid rgba(255,255,255,.6);position:relative;z-index:2;}
 .maintenance-card:hover{transform:translateY(-4px);box-shadow:0 32px 55px -14px rgba(0,0,0,.25);}
 .icon-wrapper{background:linear-gradient(145deg,#f0f3fe,#e9eef9);width:110px;height:110px;border-radius:60px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.8rem;box-shadow:inset 0 1px 3px rgba(0,0,0,.02),0 12px 20px -8px rgba(0,0,0,.1);border:1px solid rgba(255,255,255,.7);}
-.icon-wrapper i{font-size:3.8rem;color:var(--icon-color);filter:drop-shadow(0 2px 4px rgba(0,0,0,.05));transition:transform .3s ease;}
-.icon-wrapper:hover i{transform:rotate(12deg) scale(1.05);}
+.icon-wrapper .kwl-i{width:3.8rem;height:3.8rem;background-color:var(--icon-color);filter:drop-shadow(0 2px 4px rgba(0,0,0,.05));transition:transform .3s ease;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain;background-image:none!important;}
+.icon-wrapper:hover .kwl-i{transform:rotate(12deg) scale(1.05);}
 h1{font-size:2.4rem;font-weight:800;background:linear-gradient(130deg,var(--title-from),var(--title-to));background-clip:text;-webkit-background-clip:text;color:transparent;margin-bottom:1rem;letter-spacing:-.02em;}
 .msg-text{font-size:1.18rem;line-height:1.5;color:var(--body-text);font-weight:450;background:rgba(235,245,255,.6);padding:1.2rem 1.5rem;border-radius:60px;margin:1.5rem 0 1rem;border:1px solid rgba(255,255,255,.8);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 6px rgba(0,0,0,.02);}
 .msg-text i{margin-right:8px;color:#3b6e9e;}
@@ -910,8 +912,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .maintenance-card{max-width:600px;width:100%;background:rgba(255,255,255,.96);border-radius:48px;box-shadow:0 25px 45px -12px rgba(0,0,0,.15),0 4px 12px rgba(0,0,0,.03),inset 0 1px 0 rgba(255,255,255,.8);padding:2.8rem 2rem 3rem;text-align:center;transition:transform .25s ease,box-shadow .3s ease;border:1px solid rgba(255,255,255,.6);position:relative;z-index:2;}
 .maintenance-card:hover{transform:translateY(-4px);box-shadow:0 32px 55px -14px rgba(0,0,0,.2);}
 .icon-wrapper{background:linear-gradient(145deg,#f0f2fe,#e8ecf9);width:110px;height:110px;border-radius:60px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.8rem;box-shadow:inset 0 1px 3px rgba(0,0,0,.02),0 12px 20px -8px rgba(0,0,0,.08);border:1px solid rgba(255,255,255,.7);}
-.icon-wrapper i{font-size:3.8rem;color:var(--icon-color);filter:drop-shadow(0 2px 4px rgba(0,0,0,.05));transition:transform .2s ease;}
-.icon-wrapper:hover i{transform:rotate(3deg) scale(1.05);}
+.icon-wrapper .kwl-i{width:3.8rem;height:3.8rem;background-color:var(--icon-color);filter:drop-shadow(0 2px 4px rgba(0,0,0,.05));transition:transform .2s ease;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain;background-image:none!important;}
+.icon-wrapper:hover .kwl-i{transform:rotate(3deg) scale(1.05);}
 .name-badge{font-size:.9rem;font-weight:600;letter-spacing:.3px;text-transform:uppercase;color:#6c7a8e;background:#eef2f8;display:inline-block;padding:.3rem 1rem;border-radius:40px;margin-bottom:1rem;}
 h1{font-size:2.8rem;font-weight:700;background:linear-gradient(130deg,var(--title-from),var(--title-to));background-clip:text;-webkit-background-clip:text;color:transparent;margin-bottom:.75rem;letter-spacing:-.02em;}
 .subhead{font-size:1rem;font-weight:400;color:#6b7a8c;margin-bottom:.5rem;}
