@@ -3,7 +3,7 @@ Contributors: Ken Weill
 Tags: maintenance, under construction, coming soon
 Requires at least: 6.0
 Tested up to: 6.9.4
-Stable tag: 2.0.3
+Stable tag: 2.1.0
 License: GPL-2.0+
 
 A fully customizable maintenance/under-construction page with two built-in templates.
@@ -17,6 +17,11 @@ Two templates included:
 * Business / Brand — best for company or product sites
 * Personal / Portfolio — adds a name badge, subheading, and a custom link/resume button
 
+Three site modes:
+* Off — site is live, plugin does nothing
+* Coming Soon — returns 200 OK so search engines can index the page
+* Maintenance — returns 503 + Retry-After so search engines know it's temporary
+
 Customize everything:
 * Company / site name and icon
 * All text: tagline, ETA, status badge, footer
@@ -27,26 +32,36 @@ Customize everything:
 * Role-based bypass (admins, editors)
 * SEO robots meta tag
 
+No external icon CDN — icons are self-hosted inside the plugin for privacy compliance
+and offline use.
+
 == Installation ==
 
 1. Upload the plugin ZIP via Plugins > Add New > Upload Plugin
 2. Activate the plugin
 3. Go to Settings > KWL Maintenance to configure
-4. Pick a template, customize, then toggle maintenance mode ON
+4. Pick a mode, pick a template, customize, done
 
 == Changelog ==
 
+= 2.1.0 =
+* New: Three-way site mode selector — Off, Coming Soon (200 OK), Maintenance (503)
+* New: Self-hosted icon set — no more Font Awesome CDN dependency
+  (better privacy, GDPR-friendly, works offline)
+* Coming Soon mode correctly sends 200 OK so search engines can index the page
+* Maintenance mode correctly sends 503 + Retry-After header
+* Page title updates automatically to "Coming Soon" or "Under Construction"
+  based on the selected mode
+* Admin status pill now shows OFF / COMING SOON / MAINTENANCE clearly
+
 = 2.0.3 =
 * Bug fix: Portfolio template admin preview card was showing hardcoded "kenweill.com",
-  "Ken Weill", and static subheading/button text instead of the saved settings values.
-  The preview card now reflects your actual saved site name, name badge, subheading,
-  and custom link label.
+  "Ken Weill", and static subheading/button text. Preview card now reflects saved settings.
 
 = 2.0.2 =
 * Bug fix: /wp-login.php now correctly shows the maintenance page when Loginizer
-  (or any login-rename plugin) is active. Previously, the renamed login page caused
-  wp-login.php to become a 404 that bypassed the maintenance intercept and showed
-  the theme's 404 template instead.
+  (or any login-rename plugin) is active. Previously it fell through to the
+  theme's 404 handler instead.
 
 = 2.0.1 =
 * Added Author URI

@@ -3,7 +3,7 @@
  * Plugin Name: KWL Maintenance Mode
  * Plugin URI:  https://github.com/kenweill/kwl-maintenance-mode
  * Description: A fully customizable maintenance/under-construction page with two built-in templates — a branded business style and a personal/portfolio style. Customize everything from the WordPress dashboard.
- * Version:     2.0.3
+ * Version:     2.1.0
  * Author:      Ken Weill
  * Author URI:  https://github.com/kenweill
  * License:     GPL-2.0+
@@ -11,7 +11,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'KWL_MAINT_VERSION', '2.0.3' );
+define( 'KWL_MAINT_VERSION', '2.1.0' );
 define( 'KWL_MAINT_OPTIONS', 'kwl_maintenance_options' );
 
 /* ---------------------------------------------------------------
@@ -20,8 +20,9 @@ define( 'KWL_MAINT_OPTIONS', 'kwl_maintenance_options' );
 function kwl_maint_defaults() {
     return [
         // Toggle & template
-        'enabled'             => '0',
-        'template'            => 'business',   // 'business' | 'portfolio'
+        // Mode: 'off' | 'maintenance' | 'coming_soon'
+        'mode'                => 'off',
+        'template'            => 'business',
 
         // Shared — identity
         'site_name'           => get_bloginfo('name') ?: 'KWL Hub',
@@ -145,7 +146,7 @@ function kwl_maint_sanitize( $input ) {
         'portfolio_color_link_btn_bg','portfolio_color_link_btn_text',
     ];
     $bool_fields = [
-        'enabled','show_progress','show_email_link','show_fb_link','show_status_btn',
+        'show_progress','show_email_link','show_fb_link','show_status_btn',
         'bypass_admins','bypass_editors','show_custom_link',
     ];
     $select_fields = [ 'template' ];
@@ -165,6 +166,7 @@ function kwl_maint_sanitize( $input ) {
         $clean[$f] = isset($input[$f]) && $input[$f] ? '1' : '0';
     }
     $clean['template'] = isset($input['template']) && in_array($input['template'], ['business','portfolio']) ? $input['template'] : 'business';
+    $clean['mode'] = isset($input['mode']) && in_array($input['mode'], ['off','maintenance','coming_soon']) ? $input['mode'] : 'off';
 
     return $clean;
 }
@@ -174,7 +176,6 @@ function kwl_maint_sanitize( $input ) {
 --------------------------------------------------------------- */
 function kwl_maint_settings_page() {
     $opts   = kwl_maint_options();
-    $active = $opts['enabled'] === '1';
     $tpl    = $opts['template'];
 
     $icons = [
@@ -193,8 +194,8 @@ function kwl_maint_settings_page() {
     <div class="wrap kwl-admin-wrap">
         <h1 style="display:flex;align-items:center;gap:10px;">
             🔧 KWL Maintenance Mode
-            <span class="kwl-status-pill <?php echo $active ? 'active' : 'inactive'; ?>">
-                <?php echo $active ? '● ACTIVE' : '○ INACTIVE'; ?>
+            <span class="kwl-status-pill <?php echo ['off'=>'inactive','coming_soon'=>'coming-soon','maintenance'=>'active'][$opts['mode']]; ?>">
+                <?php echo ['off'=>'○ OFF','coming_soon'=>'● COMING SOON','maintenance'=>'● MAINTENANCE'][$opts['mode']]; ?>
             </span>
             <span class="kwl-version-pill">v<?php echo KWL_MAINT_VERSION; ?></span>
         </h1>
@@ -245,14 +246,27 @@ function kwl_maint_settings_page() {
             <!-- ===== GENERAL ===== -->
             <div class="kwl-panel active" id="tab-general">
                 <div class="kwl-card">
-                    <h2>🚦 Maintenance Mode</h2>
-                    <label class="kwl-toggle-label">
-                        <div class="kwl-toggle-switch">
-                            <input type="checkbox" name="<?php echo KWL_MAINT_OPTIONS; ?>[enabled]" value="1" <?php checked($opts['enabled'],'1'); ?>>
-                            <span class="kwl-slider"></span>
-                        </div>
-                        <span><?php echo $active ? '<strong>ON</strong> — Visitors see the maintenance page.' : '<strong>OFF</strong> — Site is live.'; ?></span>
-                    </label>
+                    <h2>&#x1F6A6; Site Mode</h2>
+                    <div class="kwl-mode-row">
+                        <label class="kwl-mode-card <?php echo $opts['mode']==='off'?'selected':''; ?>">
+                            <input type="radio" name="<?php echo KWL_MAINT_OPTIONS; ?>[mode]" value="off" <?php checked($opts['mode'],'off'); ?>>
+                            <span class="kwl-mode-icon">&#x1F7E2;</span>
+                            <span class="kwl-mode-label">Off</span>
+                            <span class="kwl-mode-desc">Site is live and accessible to everyone.</span>
+                        </label>
+                        <label class="kwl-mode-card <?php echo $opts['mode']==='coming_soon'?'selected':''; ?>">
+                            <input type="radio" name="<?php echo KWL_MAINT_OPTIONS; ?>[mode]" value="coming_soon" <?php checked($opts['mode'],'coming_soon'); ?>>
+                            <span class="kwl-mode-icon">&#x1F680;</span>
+                            <span class="kwl-mode-label">Coming Soon</span>
+                            <span class="kwl-mode-desc">Returns <code>200 OK</code>. Search engines can index this page. Best for new sites not yet launched.</span>
+                        </label>
+                        <label class="kwl-mode-card <?php echo $opts['mode']==='maintenance'?'selected':''; ?>">
+                            <input type="radio" name="<?php echo KWL_MAINT_OPTIONS; ?>[mode]" value="maintenance" <?php checked($opts['mode'],'maintenance'); ?>>
+                            <span class="kwl-mode-icon">&#x1F527;</span>
+                            <span class="kwl-mode-label">Maintenance</span>
+                            <span class="kwl-mode-desc">Returns <code>503</code> + <code>Retry-After</code>. Tells search engines the site is temporarily down.</span>
+                        </label>
+                    </div>
                 </div>
 
                 <div class="kwl-card">
@@ -605,6 +619,16 @@ input:checked + .kwl-slider:before { transform:translateX(20px); }
 .kwl-hex-text { width:80px; margin-left:8px; font-family:monospace; font-size:12px; vertical-align:middle; }
 .kwl-inline-check { margin-left:10px; font-size:13px; color:#555; }
 .kwl-icon-select { min-width:180px; }
+.kwl-status-pill.coming-soon { background:#d1ecf1; color:#0c5460; }
+.kwl-mode-row { display:flex; gap:12px; flex-wrap:wrap; margin-top:12px; }
+.kwl-mode-card { flex:1; min-width:180px; border:2px solid #e0e0e0; border-radius:10px; padding:14px 16px; cursor:pointer; transition:all .2s; display:flex; flex-direction:column; gap:5px; }
+.kwl-mode-card input[type=radio] { display:none; }
+.kwl-mode-card:hover { border-color:#a0b4c8; }
+.kwl-mode-card.selected { border-color:#2271b1; background:#f0f6fc; }
+.kwl-mode-icon { font-size:1.4rem; }
+.kwl-mode-label { font-weight:700; font-size:14px; color:#1d2327; }
+.kwl-mode-desc { font-size:12px; color:#666; line-height:1.4; }
+.kwl-mode-desc code { background:#eee; padding:1px 5px; border-radius:3px; font-size:11px; }
 </style>
 <?php }
 
@@ -621,6 +645,15 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.kwl-panel').forEach(p => p.classList.remove('active'));
             tab.classList.add('active');
             document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+        });
+    });
+
+    // Mode card selection
+    document.querySelectorAll('.kwl-mode-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.kwl-mode-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            card.querySelector('input[type=radio]').checked = true;
         });
     });
 
@@ -651,7 +684,8 @@ add_action('template_redirect', function() {
 
     $is_preview = isset($_GET['kwl_preview']) && current_user_can('manage_options');
 
-    if ( $opts['enabled'] !== '1' && ! $is_preview ) return;
+    $mode = $opts['mode'];
+    if ( $mode === 'off' && ! $is_preview ) return;
 
     if ( ! $is_preview ) {
         if ( is_user_logged_in() ) {
@@ -671,9 +705,9 @@ add_action('template_redirect', function() {
     if ( is_admin() || $GLOBALS['pagenow'] === 'wp-login.php' || substr( $request_path, -12 ) === 'wp-login.php' ) return;
 
     if ( $opts['template'] === 'portfolio' ) {
-        kwl_maint_render_portfolio($opts);
+        kwl_maint_render_portfolio($opts, $mode);
     } else {
-        kwl_maint_render_business($opts);
+        kwl_maint_render_business($opts, $mode);
     }
     exit;
 });
@@ -681,18 +715,29 @@ add_action('template_redirect', function() {
 /* ---------------------------------------------------------------
    SHARED HEAD / FOOT HELPERS
 --------------------------------------------------------------- */
-function kwl_maint_head( $title, $robots, $extra_css = '' ) {
-    status_header(503);
-    header('Retry-After: 3600');
+function kwl_maint_head( $title, $robots, $extra_css = '', $mode = 'maintenance' ) {
+    // Coming Soon = 200 OK so search engines can index the page.
+    // Maintenance = 503 + Retry-After so they know it's temporary.
+    if ( $mode === 'maintenance' ) {
+        status_header(503);
+        header('Retry-After: 3600');
+    } else {
+        status_header(200);
+    }
     header('Content-Type: text/html; charset=UTF-8');
+    // Self-hosted icons (no CDN dependency)
+    $icons_url = plugin_dir_url( __FILE__ ) . 'assets/kwl-icons.css?v=' . KWL_MAINT_VERSION;
+    // Dynamic icon map: maps data-icon attribute to local kwl-i-* CSS class
+    $icon_js = 'var kwlIconMap={"fa-tools":"kwl-i-tools","fa-laptop-code":"kwl-i-laptop-code","fa-hard-hat":"kwl-i-hard-hat","fa-paint-roller":"kwl-i-paint-roller","fa-wrench":"kwl-i-wrench","fa-cog":"kwl-i-cog","fa-rocket":"kwl-i-rocket","fa-magic":"kwl-i-magic","fa-user-astronaut":"kwl-i-user-astronaut","fa-flask":"kwl-i-flask"};document.querySelectorAll(".kwl-i-dyn").forEach(function(el){var ic=el.getAttribute("data-icon");if(kwlIconMap[ic])el.classList.add(kwlIconMap[ic]);});';
     echo '<!DOCTYPE html><html lang="en"><head>';
     echo '<meta charset="UTF-8">';
     echo '<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=yes">';
     echo '<meta name="robots" content="' . esc_attr($robots) . '">';
     echo '<title>' . esc_html($title) . '</title>';
     echo '<link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,800|Raleway:300,400,500,600,700,800" rel="stylesheet">';
-    echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">';
+    echo '<link rel="stylesheet" href="' . esc_url($icons_url) . '">';
     echo '<style>' . $extra_css . '</style>';
+    echo '<script>' . $icon_js . '</script>';
     echo '</head><body>';
 }
 
@@ -731,7 +776,7 @@ JS;
 /* ---------------------------------------------------------------
    TEMPLATE 1 — BUSINESS
 --------------------------------------------------------------- */
-function kwl_maint_render_business( $opts ) {
+function kwl_maint_render_business( $opts, $mode = 'maintenance' ) {
     $progress = intval($opts['progress_value']);
     $p_max    = min(100, $progress + 6);
     $p_min    = max(0,   $progress - 4);
@@ -775,7 +820,10 @@ h1{font-size:2.4rem;font-weight:800;background:linear-gradient(130deg,var(--titl
 @media(max-width:550px){.maintenance-card{padding:1.8rem 1.5rem 2rem;}h1{font-size:1.9rem;}.msg-text{font-size:1rem;padding:1rem;}.icon-wrapper{width:85px;height:85px;}.icon-wrapper i{font-size:2.8rem;}.contact-link{padding:6px 14px;font-size:.8rem;}}
 ";
 
-    kwl_maint_head( esc_html($opts['site_name']) . ' • Under Construction', $opts['meta_robots'], $css );
+    $page_title = $mode === 'coming_soon'
+        ? esc_html($opts['site_name']) . ' • Coming Soon'
+        : esc_html($opts['site_name']) . ' • Under Construction';
+    kwl_maint_head( $page_title, $opts['meta_robots'], $css, $mode );
     ?>
     <section class="maintenance-card">
         <div class="icon-wrapper">
@@ -839,7 +887,7 @@ h1{font-size:2.4rem;font-weight:800;background:linear-gradient(130deg,var(--titl
 /* ---------------------------------------------------------------
    TEMPLATE 2 — PORTFOLIO
 --------------------------------------------------------------- */
-function kwl_maint_render_portfolio( $opts ) {
+function kwl_maint_render_portfolio( $opts, $mode = 'maintenance' ) {
     $progress = intval($opts['progress_value']);
     $p_max    = min(100, $progress + 6);
     $p_min    = max(0,   $progress - 4);
@@ -886,7 +934,10 @@ h1{font-size:2.8rem;font-weight:700;background:linear-gradient(130deg,var(--titl
 @media(max-width:550px){.maintenance-card{padding:1.8rem 1.5rem 2rem;}h1{font-size:2rem;}.icon-wrapper{width:85px;height:85px;}.icon-wrapper i{font-size:2.8rem;}.resume-link{padding:.6rem 1.4rem;font-size:.85rem;}}
 ";
 
-    kwl_maint_head( esc_html($opts['portfolio_name_badge']) . ' • Site Maintenance', $opts['meta_robots'], $css );
+    $page_title = $mode === 'coming_soon'
+        ? esc_html($opts['portfolio_name_badge']) . ' • Coming Soon'
+        : esc_html($opts['portfolio_name_badge']) . ' • Site Maintenance';
+    kwl_maint_head( $page_title, $opts['meta_robots'], $css, $mode );
     ?>
     <section class="maintenance-card">
         <div class="icon-wrapper">
