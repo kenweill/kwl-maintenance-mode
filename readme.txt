@@ -3,7 +3,7 @@ Contributors: Ken Weill
 Tags: maintenance, under construction, coming soon
 Requires at least: 6.0
 Tested up to: 6.9.4
-Stable tag: 2.1.1
+Stable tag: 2.1.3
 License: GPL-2.0+
 
 A fully customizable maintenance/under-construction page with two built-in templates.
@@ -43,6 +43,17 @@ and offline use.
 4. Pick a mode, pick a template, customize, done
 
 == Changelog ==
+
+= 2.1.3 =
+* Bug fix: Page icon definitively fixed. Replaced the CSS mask-image approach
+  (which was unreliable across browsers) with direct inline SVG output from PHP.
+  The icon SVG is now rendered server-side with the correct color baked in —
+  no JavaScript, no CDN, no CSS tricks required.
+
+= 2.1.2 =
+* Bug fix: Page icon (tools, laptop, etc.) was showing blank on the maintenance
+  page. The icon-mapping script was placed in <head> and ran before the page body
+  existed, so querySelectorAll found no elements. Wrapped in DOMContentLoaded.
 
 = 2.1.1 =
 * Bug fix: Admin tab panels (General, Business Content, etc.) were all visible

@@ -3,7 +3,7 @@
  * Plugin Name: KWL Maintenance Mode
  * Plugin URI:  https://github.com/kenweill/kwl-maintenance-mode
  * Description: A fully customizable maintenance/under-construction page with two built-in templates — a branded business style and a personal/portfolio style. Customize everything from the WordPress dashboard.
- * Version:     2.1.1
+ * Version:     2.1.3
  * Author:      Ken Weill
  * Author URI:  https://github.com/kenweill
  * License:     GPL-2.0+
@@ -11,7 +11,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'KWL_MAINT_VERSION', '2.1.1' );
+define( 'KWL_MAINT_VERSION', '2.1.3' );
 define( 'KWL_MAINT_OPTIONS', 'kwl_maintenance_options' );
 
 /* ---------------------------------------------------------------
@@ -678,6 +678,32 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <?php }
 
+
+/* ---------------------------------------------------------------
+   INLINE SVG ICON HELPER
+   Outputs SVG directly from PHP. No JS, no CDN, no CSS tricks.
+--------------------------------------------------------------- */
+function kwl_get_icon_svg( $icon, $color, $size = '3.6rem' ) {
+    $color = esc_attr( $color );
+    $paths = [
+        'fa-tools'          => 'M501.1 395.7L384 278.6c-23.1-23.1-57.6-27.6-85.4-13.9L192 158.1V96L64 0 0 64l96 128h62.1l106.6 106.6c-13.6 27.8-9.2 62.3 13.9 85.4l117.1 117.1c14.6 14.6 38.2 14.6 52.7 0l52.7-52.7c14.5-14.6 14.5-38.2 0-52.7zM331.7 225c28.3 0 54.9 11 74.9 31l19.4 19.4c15.8-4.4 30.1-13.1 40.8-25.4 34.7-40.9 33.4-103.1-3.8-142.4C429.2 76.7 384 64 344.5 71.3L287.3 28.3C253.4 1.7 206.6.8 171.3 24.4L212 65.1c21.1 20.1 31.7 47.2 31.7 74.4 0 27.7-11 54.3-31.3 74L163.8 265c-1.5-4.3-2.3-8.8-2.3-13.5v-18.1l-43-43-45.6 45.6c-23 23-30.8 57.6-16.8 86 10.2 20.6 28.1 36.8 49.9 43.9 16.5 5.4 33.6 4.7 48.9-1.5l15 15 10.9-10.9C214.7 396.5 256 416 256 416l43.4-43.4c-28.8-12.7-47.7-41.1-47.7-73.5 0-18 6.1-34.9 17.3-48.3L289.7 231c13.1 10.8 28.3 17.3 42 17.3v-23.3zm-232.9 83.3a24 24 0 1 1 0-48 24 24 0 0 1 0 48z',
+        'fa-laptop-code'    => 'M255.03 261.65c6.25 6.25 16.38 6.25 22.63 0l11.31-11.31c6.25-6.25 6.25-16.38 0-22.63L253.25 192l35.71-35.72c6.25-6.25 6.25-16.38 0-22.63l-11.31-11.31c-6.25-6.25-16.38-6.25-22.63 0l-58.34 58.34c-6.25 6.25-6.25 16.38 0 22.63l58.35 58.34zm96.01-11.3l11.31 11.31c6.25 6.25 16.38 6.25 22.63 0l58.34-58.34c6.25-6.25 6.25-16.38 0-22.63l-58.34-58.34c-6.25-6.25-16.38-6.25-22.63 0l-11.31 11.31c-6.25 6.25-6.25 16.38 0 22.63L386.75 192l-35.71 35.72c-6.25 6.25-6.25 16.38 0 22.63zM624 416H381.54c-.74 19.81-14.71 32-32.74 32H288c-18.69 0-33.02-17.47-32.77-32H16c-8.8 0-16 7.2-16 16v16c0 35.2 28.8 64 64 64h512c35.2 0 64-28.8 64-64v-16c0-8.8-7.2-16-16-16zM576 48c0-26.4-21.6-48-48-48H112C85.6 0 64 21.6 64 48v336h512V48zm-64 272H128V64h384v256z',
+        'fa-hard-hat'       => 'M480 288c0-80.25-49.28-148.92-119.19-177.62L352 96V48c0-8.84-7.16-16-16-16h-32c-8.84 0-16 7.16-16 16v48h-64V48c0-8.84-7.16-16-16-16h-32c-8.84 0-16 7.16-16 16v48h-8.81C81.28 139.08 32 207.75 32 288v32h448v-32zm-352-64h256v64H128v-64zM496 352H16c-8.84 0-16 7.16-16 16v32c0 8.84 7.16 16 16 16h480c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16z',
+        'fa-paint-roller'   => 'M416 128V96c0-17.67-14.33-32-32-32H64C46.33 64 32 78.33 32 96v128c0 17.67 14.33 32 32 32h320c17.67 0 32-14.33 32-32v-32h32v64c0 17.67 14.33 32 32 32s32-14.33 32-32V160h-96v-32zM192 224H96v-64h96v64zM192 352h-64c-17.67 0-32 14.33-32 32v96c0 17.67 14.33 32 32 32h64c17.67 0 32-14.33 32-32v-96c0-17.67-14.33-32-32-32z',
+        'fa-wrench'         => 'M507.73 109.1c-2.24-9.03-13.54-12.09-20.12-5.51l-74.36 74.36-67.88-11.31-11.31-67.88 74.36-74.36c6.62-6.62 3.43-17.9-5.66-20.16-47.38-11.74-97.55.91-134.11 37.47A168.387 168.387 0 0 0 0 174.5c0 43.61 16.61 84.5 45.66 115.83L20.74 316.29C7.56 330.85 0 349.51 0 369.88V512l96 .01 32-32v-64h64v-64h64l31.99-32V256h.12l3.01-3.01C265.68 277.89 246.14 384 337.6 384c55.4 0 106.3-27.1 137.7-72.7 31.5-45.8 37.6-103.7 17.8-154.2zM96 368c0 8.84-7.16 16-16 16s-16-7.16-16-16 7.16-16 16-16 16 7.16 16 16z',
+        'fa-cog'            => 'M487.4 315.7l-42.6-24.6c4.3-23.2 4.3-47 0-70.2l42.6-24.6c4.9-2.8 7.1-8.6 5.5-14-11.1-35.6-30-67.8-54.7-94.6-3.8-4.1-10-5.1-14.8-2.3L380.8 110c-17.9-15.4-38.5-27.3-60.8-35.1V25.8c0-5.6-3.9-10.5-9.4-11.7-36.7-8.2-74.3-7.8-109.2 0-5.5 1.2-9.4 6.1-9.4 11.7V75c-22.2 7.9-42.8 19.8-60.8 35.1L88.7 85.5c-4.9-2.8-11-1.9-14.8 2.3-24.7 26.7-43.6 58.9-54.7 94.6-1.7 5.4.6 11.2 5.5 14L67.3 221c-4.3 23.2-4.3 47 0 70.2l-42.6 24.6c-4.9 2.8-7.1 8.6-5.5 14 11.1 35.6 30 67.8 54.7 94.6 3.8 4.1 10 5.1 14.8 2.3l42.6-24.6c17.9 15.4 38.5 27.3 60.8 35.1v49.2c0 5.6 3.9 10.5 9.4 11.7 36.7 8.2 74.3 7.8 109.2 0 5.5-1.2 9.4-6.1 9.4-11.7v-49.2c22.2-7.9 42.8-19.8 60.8-35.1l42.6 24.6c4.9 2.8 11 1.9 14.8-2.3 24.7-26.7 43.6-58.9 54.7-94.6 1.5-5.5-.7-11.3-5.6-14.1zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z',
+        'fa-rocket'         => 'M505.05 19.1a15.89 15.89 0 0 0-11.1-11.1c-103.09-25.7-162.62 32.49-197.54 71.27C255.82 100.56 236.04 125 224 147.79V160h-64l-25.6 19.2L96 224H48a48 48 0 0 0-38.4 76.8l48 64a48.07 48.07 0 0 0 38.4 19.2H128v64a32 32 0 0 0 32 32h32v48a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16v-48h32a32 32 0 0 0 32-32v-68.1c25.46-10.29 66.26-31.29 98.15-66.44 39.74-43.67 96.27-108.62 54.9-193.36zM384 168a40 40 0 1 1 40-40 40 40 0 0 1-40 40z',
+        'fa-magic'          => 'M224 96l16-32 32-16-32-16-16-32-16 32-32 16 32 16 16 32zM80 160l26.66-53.33L160 80l-53.34-26.67L80 0 53.34 53.33 0 80l53.34 26.67L80 160zm352 128l-26.66 53.33L352 368l53.34 26.67L432 448l26.66-53.33L512 368l-53.34-26.67L432 288zm70.62-193.77L417.77 9.38C411.53 3.12 403.34 0 395.15 0c-8.19 0-16.38 3.12-22.63 9.38L9.38 372.52c-12.5 12.5-12.5 32.76 0 45.25l84.85 84.85c6.25 6.25 14.44 9.37 22.62 9.37 8.19 0 16.38-3.12 22.63-9.37l363.14-363.15c12.5-12.48 12.5-32.75 0-45.24zM359.45 203.46l-50.91-50.91 70.45-70.45 50.91 50.91-70.45 70.45z',
+        'fa-user-astronaut' => 'M128 120c0 57.42 38.68 105.6 91.04 120.77C219 243.84 224 250 224 256c0 9.31-8.88 12.68-16.4 14.86C152.25 286.02 112 332.59 112 384v8c0 8.84 7.16 16 16 16h16v16c0 8.84 7.16 16 16 16h224c8.84 0 16-7.16 16-16v-16h16c8.84 0 16-7.16 16-16v-8c0-51.41-40.25-97.98-95.6-113.14-7.52-2.18-16.4-5.55-16.4-14.86 0-6 5-12.16 12.96-15.23C384 225.6 416 177.42 416 120V48c0-26.51-21.49-48-48-48H176c-26.51 0-48 21.49-48 48v72zm144 0H176V48h96v72zM0 480c2.66 15.44 16.2 32 32 32h384c15.8 0 29.3-16.56 32-32L432 320H32L0 480zm320-112c17.67 0 32 14.33 32 32s-14.33 32-32 32-32-14.33-32-32 14.33-32 32-32zm-192 0c17.67 0 32 14.33 32 32s-14.33 32-32 32-32-14.33-32-32 14.33-32 32-32zm96 0c17.67 0 32 14.33 32 32s-14.33 32-32 32-32-14.33-32-32 14.33-32 32-32z',
+        'fa-flask'          => 'M437.2 403.5L320 215V64h8c13.3 0 24-10.7 24-24V24c0-13.3-10.7-24-24-24H120c-13.3 0-24 10.7-24 24v16c0 13.3 10.7 24 24 24h8v151L10.8 403.5C-18.5 450.6 15.3 512 70.9 512h306.2c55.7 0 89.4-61.5 60.1-108.5zM137.9 320l48.2-77.6c3.7-5.9 5.9-12.8 5.9-19.6V64h64v158.8c0 6.8 2.2 13.7 5.9 19.6L309.9 320H137.9z',
+    ];
+    $vb   = ( $icon === 'fa-laptop-code' ) ? '0 0 640 512' : '0 0 512 512';
+    $path = isset( $paths[ $icon ] ) ? $paths[ $icon ] : $paths['fa-tools'];
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' . $vb . '" '
+         . 'style="width:' . esc_attr($size) . ';height:' . esc_attr($size) . ';fill:' . $color . ';display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,.08));" '
+         . 'aria-hidden="true"><path d="' . $path . '"/></svg>';
+}
+
 /* ---------------------------------------------------------------
    FRONT-END INTERCEPT
 --------------------------------------------------------------- */
@@ -730,7 +756,9 @@ function kwl_maint_head( $title, $robots, $extra_css = '', $mode = 'maintenance'
     // Self-hosted icons (no CDN dependency)
     $icons_url = plugin_dir_url( __FILE__ ) . 'assets/kwl-icons.css?v=' . KWL_MAINT_VERSION;
     // Dynamic icon map: maps data-icon attribute to local kwl-i-* CSS class
-    $icon_js = 'var kwlIconMap={"fa-tools":"kwl-i-tools","fa-laptop-code":"kwl-i-laptop-code","fa-hard-hat":"kwl-i-hard-hat","fa-paint-roller":"kwl-i-paint-roller","fa-wrench":"kwl-i-wrench","fa-cog":"kwl-i-cog","fa-rocket":"kwl-i-rocket","fa-magic":"kwl-i-magic","fa-user-astronaut":"kwl-i-user-astronaut","fa-flask":"kwl-i-flask"};document.querySelectorAll(".kwl-i-dyn").forEach(function(el){var ic=el.getAttribute("data-icon");if(kwlIconMap[ic])el.classList.add(kwlIconMap[ic]);});';
+    // Wrap in DOMContentLoaded so it runs AFTER the body is parsed.
+    // Without this the script fires in <head> before .kwl-i-dyn elements exist.
+    $icon_js = 'document.addEventListener("DOMContentLoaded",function(){var kwlIconMap={"fa-tools":"kwl-i-tools","fa-laptop-code":"kwl-i-laptop-code","fa-hard-hat":"kwl-i-hard-hat","fa-paint-roller":"kwl-i-paint-roller","fa-wrench":"kwl-i-wrench","fa-cog":"kwl-i-cog","fa-rocket":"kwl-i-rocket","fa-magic":"kwl-i-magic","fa-user-astronaut":"kwl-i-user-astronaut","fa-flask":"kwl-i-flask"};document.querySelectorAll(".kwl-i-dyn").forEach(function(el){var ic=el.getAttribute("data-icon");if(kwlIconMap[ic])el.classList.add(kwlIconMap[ic]);});});';
     echo '<!DOCTYPE html><html lang="en"><head>';
     echo '<meta charset="UTF-8">';
     echo '<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=yes">';
@@ -803,8 +831,6 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .maintenance-card{max-width:620px;width:100%;background:var(--card-bg);border-radius:48px;box-shadow:0 25px 45px -12px rgba(0,0,0,.2),0 4px 12px rgba(0,0,0,.03),inset 0 1px 0 rgba(255,255,255,.8);padding:2.5rem 2rem 3rem;text-align:center;transition:transform .25s ease,box-shadow .3s ease;border:1px solid rgba(255,255,255,.6);position:relative;z-index:2;}
 .maintenance-card:hover{transform:translateY(-4px);box-shadow:0 32px 55px -14px rgba(0,0,0,.25);}
 .icon-wrapper{background:linear-gradient(145deg,#f0f3fe,#e9eef9);width:110px;height:110px;border-radius:60px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.8rem;box-shadow:inset 0 1px 3px rgba(0,0,0,.02),0 12px 20px -8px rgba(0,0,0,.1);border:1px solid rgba(255,255,255,.7);}
-.icon-wrapper .kwl-i{width:3.8rem;height:3.8rem;background-color:var(--icon-color);filter:drop-shadow(0 2px 4px rgba(0,0,0,.05));transition:transform .3s ease;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain;background-image:none!important;}
-.icon-wrapper:hover .kwl-i{transform:rotate(12deg) scale(1.05);}
 h1{font-size:2.4rem;font-weight:800;background:linear-gradient(130deg,var(--title-from),var(--title-to));background-clip:text;-webkit-background-clip:text;color:transparent;margin-bottom:1rem;letter-spacing:-.02em;}
 .msg-text{font-size:1.18rem;line-height:1.5;color:var(--body-text);font-weight:450;background:rgba(235,245,255,.6);padding:1.2rem 1.5rem;border-radius:60px;margin:1.5rem 0 1rem;border:1px solid rgba(255,255,255,.8);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 6px rgba(0,0,0,.02);}
 .msg-text i{margin-right:8px;color:#3b6e9e;}
@@ -819,7 +845,7 @@ h1{font-size:2.4rem;font-weight:800;background:linear-gradient(130deg,var(--titl
 .contact-link{text-decoration:none;font-size:.85rem;font-weight:500;color:var(--link-text);background:var(--link-bg);padding:8px 18px;border-radius:40px;transition:all .2s ease;display:inline-flex;align-items:center;gap:8px;border:1px solid #dce5f0;}
 .contact-link:hover{background:#e6edf6;color:#1f4a73;transform:scale(.97);border-color:#bfd2e6;}
 .footer-note{font-size:.7rem;color:#8ba0b5;margin-top:2.2rem;border-top:1px dashed #dce5f0;padding-top:1.5rem;letter-spacing:.3px;}
-@media(max-width:550px){.maintenance-card{padding:1.8rem 1.5rem 2rem;}h1{font-size:1.9rem;}.msg-text{font-size:1rem;padding:1rem;}.icon-wrapper{width:85px;height:85px;}.icon-wrapper i{font-size:2.8rem;}.contact-link{padding:6px 14px;font-size:.8rem;}}
+@media(max-width:550px){.maintenance-card{padding:1.8rem 1.5rem 2rem;}h1{font-size:1.9rem;}.msg-text{font-size:1rem;padding:1rem;}.icon-wrapper{width:85px;height:85px;}.contact-link{padding:6px 14px;font-size:.8rem;}}
 ";
 
     $page_title = $mode === 'coming_soon'
@@ -829,7 +855,7 @@ h1{font-size:2.4rem;font-weight:800;background:linear-gradient(130deg,var(--titl
     ?>
     <section class="maintenance-card">
         <div class="icon-wrapper">
-            <i class="fas <?php echo esc_attr($opts['icon']); ?>"></i>
+            <?php echo kwl_get_icon_svg( $opts['icon'], $opts['color_icon'] ); ?>
         </div>
         <h1><?php echo esc_html($opts['site_name']); ?></h1>
         <div class="msg-text">
@@ -912,8 +938,6 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .maintenance-card{max-width:600px;width:100%;background:rgba(255,255,255,.96);border-radius:48px;box-shadow:0 25px 45px -12px rgba(0,0,0,.15),0 4px 12px rgba(0,0,0,.03),inset 0 1px 0 rgba(255,255,255,.8);padding:2.8rem 2rem 3rem;text-align:center;transition:transform .25s ease,box-shadow .3s ease;border:1px solid rgba(255,255,255,.6);position:relative;z-index:2;}
 .maintenance-card:hover{transform:translateY(-4px);box-shadow:0 32px 55px -14px rgba(0,0,0,.2);}
 .icon-wrapper{background:linear-gradient(145deg,#f0f2fe,#e8ecf9);width:110px;height:110px;border-radius:60px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.8rem;box-shadow:inset 0 1px 3px rgba(0,0,0,.02),0 12px 20px -8px rgba(0,0,0,.08);border:1px solid rgba(255,255,255,.7);}
-.icon-wrapper .kwl-i{width:3.8rem;height:3.8rem;background-color:var(--icon-color);filter:drop-shadow(0 2px 4px rgba(0,0,0,.05));transition:transform .2s ease;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain;background-image:none!important;}
-.icon-wrapper:hover .kwl-i{transform:rotate(3deg) scale(1.05);}
 .name-badge{font-size:.9rem;font-weight:600;letter-spacing:.3px;text-transform:uppercase;color:#6c7a8e;background:#eef2f8;display:inline-block;padding:.3rem 1rem;border-radius:40px;margin-bottom:1rem;}
 h1{font-size:2.8rem;font-weight:700;background:linear-gradient(130deg,var(--title-from),var(--title-to));background-clip:text;-webkit-background-clip:text;color:transparent;margin-bottom:.75rem;letter-spacing:-.02em;}
 .subhead{font-size:1rem;font-weight:400;color:#6b7a8c;margin-bottom:.5rem;}
@@ -943,7 +967,7 @@ h1{font-size:2.8rem;font-weight:700;background:linear-gradient(130deg,var(--titl
     ?>
     <section class="maintenance-card">
         <div class="icon-wrapper">
-            <i class="fas <?php echo esc_attr($opts['icon']); ?>"></i>
+            <?php echo kwl_get_icon_svg( $opts['icon'], $opts['portfolio_color_icon'] ); ?>
         </div>
 
         <?php if ( ! empty($opts['portfolio_name_badge']) ) : ?>
