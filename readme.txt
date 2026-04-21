@@ -3,7 +3,7 @@ Contributors: Ken Weill
 Tags: maintenance, under construction, coming soon
 Requires at least: 6.0
 Tested up to: 6.9.4
-Stable tag: 2.1.3
+Stable tag: 2.1.4
 License: GPL-2.0+
 
 A fully customizable maintenance/under-construction page with two built-in templates.
@@ -43,6 +43,11 @@ and offline use.
 4. Pick a mode, pick a template, customize, done
 
 == Changelog ==
+
+= 2.1.4 =
+* Bug fix: Replaced broken inline SVG paths (which displayed wrong/deformed icons)
+  with emoji-based icons in the icon circle. Emoji are universally supported,
+  need no CDN, no SVG paths, and match the labels shown in the admin dropdown.
 
 = 2.1.3 =
 * Bug fix: Page icon definitively fixed. Replaced the CSS mask-image approach
