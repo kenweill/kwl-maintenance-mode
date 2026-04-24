@@ -3,7 +3,7 @@ Contributors: Ken Weill
 Tags: maintenance, under construction, coming soon
 Requires at least: 6.0
 Tested up to: 6.9.4
-Stable tag: 2.1.4
+Stable tag: 2.1.5
 License: GPL-2.0+
 
 A fully customizable maintenance/under-construction page with two built-in templates.
@@ -43,6 +43,13 @@ and offline use.
 4. Pick a mode, pick a template, customize, done
 
 == Changelog ==
+
+= 2.1.5 =
+* Improvement: Robots meta tag is now set automatically based on the selected mode.
+  Coming Soon always sets index, follow. Maintenance always sets noindex, nofollow.
+  This prevents mismatched settings (e.g. Maintenance mode with index, follow).
+  The manual robots dropdown has been replaced with an informational display showing
+  exactly what each mode sends.
 
 = 2.1.4 =
 * Bug fix: Replaced broken inline SVG paths (which displayed wrong/deformed icons)

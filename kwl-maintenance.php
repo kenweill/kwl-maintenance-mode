@@ -3,7 +3,7 @@
  * Plugin Name: KWL Maintenance Mode
  * Plugin URI:  https://github.com/kenweill/kwl-maintenance-mode
  * Description: A fully customizable maintenance/under-construction page with two built-in templates.
- * Version:     2.1.4
+ * Version:     2.1.5
  * Author:      Ken Weill
  * Author URI:  https://github.com/kenweill
  * License:     GPL-2.0+
@@ -11,7 +11,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'KWL_MAINT_VERSION', '2.1.4' );
+define( 'KWL_MAINT_VERSION', '2.1.5' );
 define( 'KWL_MAINT_OPTIONS', 'kwl_maintenance_options' );
 
 /* ---------------------------------------------------------------
@@ -137,6 +137,15 @@ function kwl_maint_sanitize( $input ) {
     $clean['template']       = ( isset( $input['template'] ) && in_array( $input['template'], array( 'business', 'portfolio' ), true ) ) ? $input['template'] : 'business';
     $clean['mode']           = ( isset( $input['mode'] ) && in_array( $input['mode'], array( 'off', 'maintenance', 'coming_soon' ), true ) ) ? $input['mode'] : 'off';
 
+    // Auto-set robots meta based on mode — prevents mismatched settings.
+    if ( $clean['mode'] === 'maintenance' ) {
+        $clean['meta_robots'] = 'noindex, nofollow';
+    } elseif ( $clean['mode'] === 'coming_soon' ) {
+        $clean['meta_robots'] = 'index, follow';
+    } else {
+        $clean['meta_robots'] = 'noindex, nofollow'; // off — safe default, plugin not active anyway
+    }
+
     return $clean;
 }
 
@@ -144,20 +153,8 @@ function kwl_maint_sanitize( $input ) {
    ICON HELPER
 --------------------------------------------------------------- */
 function kwl_maint_icon( $icon ) {
-    $map = array(
-        'fa-tools'          => '&#x1F527;',
-        'fa-laptop-code'    => '&#x1F4BB;',
-        'fa-hard-hat'       => '&#x1FA96;',
-        'fa-paint-roller'   => '&#x1F58C;',
-        'fa-wrench'         => '&#x1F529;',
-        'fa-cog'            => '&#x2699;&#xFE0F;',
-        'fa-rocket'         => '&#x1F680;',
-        'fa-magic'          => '&#x2728;',
-        'fa-user-astronaut' => '&#x1F9D1;&#x200D;&#x1F680;',
-        'fa-flask'          => '&#x1F9EA;',
-    );
-    $emoji = isset( $map[ $icon ] ) ? $map[ $icon ] : $map['fa-tools'];
-    return '<span style="font-size:3.2rem;line-height:1;display:block;text-align:center;" aria-hidden="true">' . $emoji . '</span>';
+    $icon = sanitize_html_class( $icon );
+    return '<i class="fas ' . esc_attr( $icon ) . '" aria-hidden="true"></i>';
 }
 
 /* ---------------------------------------------------------------
@@ -172,16 +169,16 @@ function kwl_maint_settings_page() {
     $pill_label = array( 'off' => '&#9711; OFF', 'coming_soon' => '&#9679; COMING SOON', 'maintenance' => '&#9679; MAINTENANCE' );
 
     $icons = array(
-        'fa-tools'          => 'Tools &#x1F527;',
-        'fa-laptop-code'    => 'Laptop Code &#x1F4BB;',
-        'fa-hard-hat'       => 'Hard Hat &#x1FA96;',
-        'fa-paint-roller'   => 'Paint Roller &#x1F58C;',
-        'fa-wrench'         => 'Wrench &#x1F529;',
-        'fa-cog'            => 'Cog &#x2699;',
-        'fa-rocket'         => 'Rocket &#x1F680;',
-        'fa-magic'          => 'Magic &#x2728;',
-        'fa-user-astronaut' => 'Astronaut &#x1F9D1;',
-        'fa-flask'          => 'Flask &#x1F9EA;',
+        'fa-tools'          => '🔧 Tools',
+        'fa-laptop-code'    => '💻 Laptop Code',
+        'fa-hard-hat'       => '🪖 Hard Hat',
+        'fa-paint-roller'   => '🖌 Paint Roller',
+        'fa-wrench'         => '🔩 Wrench',
+        'fa-cog'            => '⚙️ Cog',
+        'fa-rocket'         => '🚀 Rocket',
+        'fa-magic'          => '✨ Magic',
+        'fa-user-astronaut' => '👨‍🚀 Astronaut',
+        'fa-flask'          => '🧪 Flask',
     );
     ?>
     <div class="wrap kwl-wrap">
@@ -418,16 +415,21 @@ function kwl_maint_settings_page() {
                     </table>
                 </div>
                 <div class="kwl-card">
-                    <h2>&#x1F916; SEO</h2>
-                    <p style="color:#777;font-size:13px;margin-bottom:12px;"><strong>Coming Soon</strong> always sends 200 OK. <strong>Maintenance</strong> always sends 503.</p>
+                    <h2>&#x1F916; SEO &amp; Robots Meta</h2>
+                    <p style="color:#555;font-size:13px;margin-bottom:16px;">The robots meta tag is set <strong>automatically</strong> based on the mode you select. No manual adjustment needed.</p>
                     <table class="form-table">
-                        <tr><th>Robots Meta Tag</th><td>
-                            <select name="<?php echo KWL_MAINT_OPTIONS; ?>[meta_robots]">
-                                <option value="noindex, nofollow" <?php selected( $opts['meta_robots'], 'noindex, nofollow' ); ?>>noindex, nofollow (recommended for Maintenance)</option>
-                                <option value="noindex, follow"   <?php selected( $opts['meta_robots'], 'noindex, follow' ); ?>>noindex, follow</option>
-                                <option value="index, follow"     <?php selected( $opts['meta_robots'], 'index, follow' ); ?>>index, follow (recommended for Coming Soon)</option>
-                            </select>
-                        </td></tr>
+                        <tr>
+                            <th>&#x1F680; Coming Soon</th>
+                            <td><code>200 OK</code> &nbsp;+&nbsp; <code>index, follow</code> &mdash; search engines can index your page.</td>
+                        </tr>
+                        <tr>
+                            <th>&#x1F527; Maintenance</th>
+                            <td><code>503</code> + <code>Retry-After</code> &nbsp;+&nbsp; <code>noindex, nofollow</code> &mdash; search engines know it's temporary.</td>
+                        </tr>
+                        <tr>
+                            <th>Current robots tag</th>
+                            <td><code><?php echo esc_html( $opts['meta_robots'] ); ?></code> &nbsp;<span style="color:#888;font-size:12px;">(set automatically when you save)</span></td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -548,6 +550,7 @@ function kwl_maint_head( $title, $robots, $css, $mode ) {
     echo '<meta name="robots" content="' . esc_attr( $robots ) . '">';
     echo '<title>' . esc_html( $title ) . '</title>';
     echo '<link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,800" rel="stylesheet">';
+    echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">';
     echo '<style>' . $css . '</style>';
     echo '</head><body>';
 }
@@ -598,7 +601,7 @@ function kwl_maint_render_business( $opts, $mode ) {
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:linear-gradient(135deg,{$opts['color_bg_from']} 0%,{$opts['color_bg_to']} 100%);font-family:'Inter',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;}
 .card{max-width:620px;width:100%;background:{$opts['color_card_bg']};border-radius:48px;box-shadow:0 25px 45px -12px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.8);padding:2.5rem 2rem 3rem;text-align:center;border:1px solid rgba(255,255,255,.6);}
-.icon-wrap{background:linear-gradient(145deg,#f0f3fe,#e9eef9);width:110px;height:110px;border-radius:60px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.8rem;box-shadow:0 12px 20px -8px rgba(0,0,0,.1);border:1px solid rgba(255,255,255,.7);}
+.icon-wrap{background:linear-gradient(145deg,#f0f3fe,#e9eef9);width:110px;height:110px;border-radius:60px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.8rem;box-shadow:0 12px 20px -8px rgba(0,0,0,.1);border:1px solid rgba(255,255,255,.7);transition:transform .25s ease;}.icon-wrap:hover{transform:rotate(8deg) scale(1.04);}.icon-wrap i{font-size:3.6rem;color:{$opts['color_icon']};filter:drop-shadow(0 2px 4px rgba(0,0,0,.05));}
 h1{font-size:2.4rem;font-weight:800;background:linear-gradient(130deg,{$opts['color_title']},{$opts['color_title_to']});background-clip:text;-webkit-background-clip:text;color:transparent;margin-bottom:1rem;letter-spacing:-.02em;}
 .msg{font-size:1.1rem;line-height:1.5;color:{$opts['color_body_text']};background:rgba(235,245,255,.6);padding:1.2rem 1.5rem;border-radius:60px;margin:1.5rem 0 1rem;border:1px solid rgba(255,255,255,.8);}
 .eta-wrap{margin:2rem 0 1.2rem;}
@@ -670,7 +673,7 @@ function kwl_maint_render_portfolio( $opts, $mode ) {
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:linear-gradient(135deg,{$opts['portfolio_color_bg_from']} 0%,{$opts['portfolio_color_bg_to']} 100%);font-family:'Inter',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;}
 .card{max-width:600px;width:100%;background:rgba(255,255,255,.96);border-radius:48px;box-shadow:0 25px 45px -12px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.8);padding:2.8rem 2rem 3rem;text-align:center;border:1px solid rgba(255,255,255,.6);}
-.icon-wrap{background:linear-gradient(145deg,#f0f2fe,#e8ecf9);width:110px;height:110px;border-radius:60px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.8rem;box-shadow:0 12px 20px -8px rgba(0,0,0,.08);border:1px solid rgba(255,255,255,.7);}
+.icon-wrap{background:linear-gradient(145deg,#f0f2fe,#e8ecf9);width:110px;height:110px;border-radius:60px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.8rem;box-shadow:0 12px 20px -8px rgba(0,0,0,.08);border:1px solid rgba(255,255,255,.7);transition:transform .2s ease;}.icon-wrap:hover{transform:rotate(5deg) scale(1.04);}.icon-wrap i{font-size:3.6rem;color:{$opts['portfolio_color_icon']};filter:drop-shadow(0 2px 4px rgba(0,0,0,.05));}
 .name-badge{font-size:.9rem;font-weight:600;letter-spacing:.3px;text-transform:uppercase;color:#6c7a8e;background:#eef2f8;display:inline-block;padding:.3rem 1rem;border-radius:40px;margin-bottom:1rem;}
 h1{font-size:2.8rem;font-weight:700;background:linear-gradient(130deg,{$opts['portfolio_color_title']},{$opts['portfolio_color_title_to']});background-clip:text;-webkit-background-clip:text;color:transparent;margin-bottom:.75rem;letter-spacing:-.02em;}
 .subhead{font-size:1rem;color:#6b7a8c;margin-bottom:.5rem;}
