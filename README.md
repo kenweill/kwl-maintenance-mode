@@ -5,7 +5,7 @@ A free, fully customizable **maintenance / under-construction page** plugin for 
 ![WordPress](https://img.shields.io/badge/WordPress-6.9%2B-blue?logo=wordpress)
 ![PHP](https://img.shields.io/badge/PHP-8.3%2B-purple?logo=php)
 ![License](https://img.shields.io/badge/License-GPL--2.0%2B-green)
-![Version](https://img.shields.io/badge/Version-2.1.5-orange)
+![Version](https://img.shields.io/badge/Version-2.1.7-orange)
 
 ---
 
@@ -18,9 +18,10 @@ A free, fully customizable **maintenance / under-construction page** plugin for 
 - 🔗 **Configurable contact links** — support email, Facebook page, and a "Check status" button
 - 🔐 **Bypass by role** — admins (and optionally editors) always see the real site
 - 👁️ **Live preview** — preview the maintenance page without enabling it for visitors
-- 🤖 **SEO-friendly** — sends a proper `503` HTTP status and lets you set the robots meta tag
+- 🤖 **SEO-friendly** — sends a proper `503` HTTP status with `Retry-After`, or `200 OK` for Coming Soon mode
 - 📱 **Fully responsive** — looks great on mobile, tablet, and desktop
-- ⚡ **Lightweight** — single PHP file, no bloat, no external dependencies beyond Google Fonts + Font Awesome CDN
+- ⚡ **Lightweight** — single PHP file, no bloat, zero external dependencies (no CDN, no web fonts)
+- 🔒 **WordPress.org compliant** — passes Plugin Check with no errors
 
 ---
 
@@ -57,19 +58,28 @@ A free, fully customizable **maintenance / under-construction page** plugin for 
 
 After activating, go to **Settings → KWL Maintenance** in your WordPress admin.
 
+### Site Modes
+
+| Mode | HTTP Status | SEO Behavior |
+|------|-------------|--------------|
+| **Off** | — | Plugin inactive, site is fully live |
+| **Coming Soon** | `200 OK` | `index, follow` — search engines can index the page |
+| **Maintenance** | `503` + `Retry-After` | `noindex, nofollow` — signals a temporary outage |
+
 ### Tabs
 
 | Tab | What you can customize |
 |-----|------------------------|
-| **General** | Maintenance mode toggle, site name, progress bar percentage |
-| **Content & Text** | Tagline, ETA/status text, status badge, support note, footer text |
-| **Colors** | Background gradient, card color, title gradient, body text, progress bar, button colors |
-| **Contact Links** | Support email address, Facebook page URL, show/hide each link |
-| **Access & SEO** | Role bypass (admins/editors), robots meta tag |
+| **General** | Site mode, site name, page icon, progress bar percentage |
+| **Business Content** | Tagline, ETA/status text, status badge, support note, footer text |
+| **Portfolio Content** | Name badge, subheading, main message, ETA text, status badge, footer, custom link block |
+| **Colors** | Per-template: background gradient, card color, title gradient, progress bar, button colors |
+| **Contact Links** | Support email, Facebook page URL, show/hide each link |
+| **Access & SEO** | Role bypass (admins/editors), robots meta tag (set automatically by mode) |
 
 ### Preview Without Going Live
 
-Click the **👁 Preview Maintenance Page** button in the settings to see exactly what visitors will see — without enabling maintenance mode for everyone.
+Click the **👁 Preview Page** button in the settings to see exactly what visitors will see — without enabling maintenance mode for everyone.
 
 ---
 
@@ -85,12 +95,11 @@ Everyone else — guests and lower-role users — will see the maintenance page 
 
 ```
 kwl-maintenance/
-├── kwl-maintenance.php   # Main plugin file (all logic + front-end template)
+├── kwl-maintenance.php   # Main plugin file (all logic + front-end templates)
 └── readme.txt            # WordPress.org readme format
 ```
 
 ---
-
 
 ## 🤝 Contributing
 
@@ -114,8 +123,8 @@ This license is required for WordPress plugins and means anyone can use, modify,
 
 ## 👤 Author
 
-**KWL Hub**
-- Website: [kwlhub.com](https://kwlhub.com)
+**Ken Weill**
+- GitHub: [@kenweill](https://github.com/kenweill)
 - Facebook: [@KWLHub](https://www.facebook.com/KWLHub)
 - Email: support@kwlhub.com
 
