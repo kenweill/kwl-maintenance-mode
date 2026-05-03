@@ -3,15 +3,17 @@
  * Plugin Name: KWL Maintenance Mode
  * Plugin URI:  https://github.com/kenweill/kwl-maintenance-mode
  * Description: A fully customizable maintenance/under-construction page with two built-in templates.
- * Version:     2.1.5
+ * Version:     2.1.6
  * Author:      Ken Weill
  * Author URI:  https://github.com/kenweill
  * License:     GPL-2.0+
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: kwl-maintenance
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'KWL_MAINT_VERSION', '2.1.5' );
+define( 'KWL_MAINT_VERSION', '2.1.6' );
 define( 'KWL_MAINT_OPTIONS', 'kwl_maintenance_options' );
 
 /* ---------------------------------------------------------------
@@ -197,19 +199,19 @@ function kwl_maint_settings_page() {
                 <h2>&#x1F6A6; Site Mode</h2>
                 <div class="kwl-3col">
                     <label class="kwl-optcard <?php echo $mode === 'off' ? 'sel' : ''; ?>">
-                        <input type="radio" name="<?php echo KWL_MAINT_OPTIONS; ?>[mode]" value="off" <?php checked( $mode, 'off' ); ?>>
+                        <input type="radio" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[mode]" value="off" <?php checked( $mode, 'off' ); ?>>
                         <span class="kwl-oc-icon">&#x1F7E2;</span>
                         <span class="kwl-oc-label">Off</span>
                         <span class="kwl-oc-desc">Site is live for everyone.</span>
                     </label>
                     <label class="kwl-optcard <?php echo $mode === 'coming_soon' ? 'sel' : ''; ?>">
-                        <input type="radio" name="<?php echo KWL_MAINT_OPTIONS; ?>[mode]" value="coming_soon" <?php checked( $mode, 'coming_soon' ); ?>>
+                        <input type="radio" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[mode]" value="coming_soon" <?php checked( $mode, 'coming_soon' ); ?>>
                         <span class="kwl-oc-icon">&#x1F680;</span>
                         <span class="kwl-oc-label">Coming Soon</span>
                         <span class="kwl-oc-desc">Returns <code>200 OK</code>. Search engines can index this page.</span>
                     </label>
                     <label class="kwl-optcard <?php echo $mode === 'maintenance' ? 'sel' : ''; ?>">
-                        <input type="radio" name="<?php echo KWL_MAINT_OPTIONS; ?>[mode]" value="maintenance" <?php checked( $mode, 'maintenance' ); ?>>
+                        <input type="radio" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[mode]" value="maintenance" <?php checked( $mode, 'maintenance' ); ?>>
                         <span class="kwl-oc-icon">&#x1F527;</span>
                         <span class="kwl-oc-label">Maintenance</span>
                         <span class="kwl-oc-desc">Returns <code>503</code> + Retry-After. Tells search engines it is temporary.</span>
@@ -222,7 +224,7 @@ function kwl_maint_settings_page() {
                 <h2>&#x1F3A8; Template</h2>
                 <div class="kwl-2col">
                     <label class="kwl-optcard <?php echo $tpl === 'business' ? 'sel' : ''; ?>">
-                        <input type="radio" name="<?php echo KWL_MAINT_OPTIONS; ?>[template]" value="business" <?php checked( $tpl, 'business' ); ?>>
+                        <input type="radio" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[template]" value="business" <?php checked( $tpl, 'business' ); ?>>
                         <div class="kwl-tpl-preview" style="background:linear-gradient(135deg,#f5f7fc,#eef2f8);">
                             <div style="font-size:1.4rem;">&#x1F527;</div>
                             <div style="font-weight:700;font-size:.9rem;color:#1a2a3f;"><?php echo esc_html( $opts['site_name'] ); ?></div>
@@ -232,7 +234,7 @@ function kwl_maint_settings_page() {
                         <span class="kwl-oc-desc">Best for company or product sites.</span>
                     </label>
                     <label class="kwl-optcard <?php echo $tpl === 'portfolio' ? 'sel' : ''; ?>">
-                        <input type="radio" name="<?php echo KWL_MAINT_OPTIONS; ?>[template]" value="portfolio" <?php checked( $tpl, 'portfolio' ); ?>>
+                        <input type="radio" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[template]" value="portfolio" <?php checked( $tpl, 'portfolio' ); ?>>
                         <div class="kwl-tpl-preview" style="background:linear-gradient(135deg,#f8f9fc,#f0f2f8);">
                             <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;color:#6c7a8e;background:#eef2f8;padding:2px 10px;border-radius:20px;"><?php echo esc_html( $opts['portfolio_name_badge'] ); ?></div>
                             <div style="font-weight:700;font-size:.9rem;color:#1e2b3c;"><?php echo esc_html( $opts['site_name'] ); ?></div>
@@ -260,9 +262,9 @@ function kwl_maint_settings_page() {
                 <div class="kwl-card">
                     <h2>&#x1F3E2; Identity</h2>
                     <table class="form-table">
-                        <tr><th>Site / Company Name</th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[site_name]" value="<?php echo esc_attr( $opts['site_name'] ); ?>" class="regular-text"></td></tr>
+                        <tr><th>Site / Company Name</th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[site_name]" value="<?php echo esc_attr( $opts['site_name'] ); ?>" class="regular-text"></td></tr>
                         <tr><th>Page Icon</th><td>
-                            <select name="<?php echo KWL_MAINT_OPTIONS; ?>[icon]">
+                            <select name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[icon]">
                                 <?php foreach ( $icons as $val => $label ) : ?>
                                 <option value="<?php echo esc_attr( $val ); ?>" <?php selected( $opts['icon'], $val ); ?>><?php echo $label; ?></option>
                                 <?php endforeach; ?>
@@ -275,10 +277,10 @@ function kwl_maint_settings_page() {
                     <h2>&#x1F4CA; Progress Bar</h2>
                     <table class="form-table">
                         <tr><th>Show Progress Bar</th><td>
-                            <label class="kwl-toggle"><input type="checkbox" name="<?php echo KWL_MAINT_OPTIONS; ?>[show_progress]" value="1" <?php checked( $opts['show_progress'], '1' ); ?>><span class="kwl-toggle-slider"></span></label>
+                            <label class="kwl-toggle"><input type="checkbox" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[show_progress]" value="1" <?php checked( $opts['show_progress'], '1' ); ?>><span class="kwl-toggle-slider"></span></label>
                         </td></tr>
                         <tr><th>Progress % (0-100)</th><td>
-                            <input type="range" min="0" max="100" name="<?php echo KWL_MAINT_OPTIONS; ?>[progress_value]" value="<?php echo esc_attr( $opts['progress_value'] ); ?>" style="width:220px;vertical-align:middle;" oninput="document.getElementById('kwl-pval').textContent=this.value+'%'">
+                            <input type="range" min="0" max="100" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[progress_value]" value="<?php echo esc_attr( $opts['progress_value'] ); ?>" style="width:220px;vertical-align:middle;" oninput="document.getElementById('kwl-pval').textContent=this.value+'%'">
                             <span id="kwl-pval" style="font-weight:600;color:#2271b1;margin-left:8px;"><?php echo esc_html( $opts['progress_value'] ); ?>%</span>
                         </td></tr>
                     </table>
@@ -290,11 +292,11 @@ function kwl_maint_settings_page() {
                 <div class="kwl-card">
                     <h2>&#x270F;&#xFE0F; Business Template - Text</h2>
                     <table class="form-table">
-                        <tr><th>Main Message</th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[tagline]" value="<?php echo esc_attr( $opts['tagline'] ); ?>" class="large-text"></td></tr>
-                        <tr><th>ETA / Status Text <span style="color:#888;font-size:11px;">(HTML ok)</span></th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[eta_text]" value="<?php echo esc_attr( $opts['eta_text'] ); ?>" class="large-text"></td></tr>
-                        <tr><th>Status Badge Text</th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[status_badge_text]" value="<?php echo esc_attr( $opts['status_badge_text'] ); ?>" class="large-text"></td></tr>
-                        <tr><th>Support Note</th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[support_note]" value="<?php echo esc_attr( $opts['support_note'] ); ?>" class="large-text"></td></tr>
-                        <tr><th>Footer Text</th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[footer_note]" value="<?php echo esc_attr( $opts['footer_note'] ); ?>" class="large-text"></td></tr>
+                        <tr><th>Main Message</th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[tagline]" value="<?php echo esc_attr( $opts['tagline'] ); ?>" class="large-text"></td></tr>
+                        <tr><th>ETA / Status Text <span style="color:#888;font-size:11px;">(HTML ok)</span></th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[eta_text]" value="<?php echo esc_attr( $opts['eta_text'] ); ?>" class="large-text"></td></tr>
+                        <tr><th>Status Badge Text</th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[status_badge_text]" value="<?php echo esc_attr( $opts['status_badge_text'] ); ?>" class="large-text"></td></tr>
+                        <tr><th>Support Note</th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[support_note]" value="<?php echo esc_attr( $opts['support_note'] ); ?>" class="large-text"></td></tr>
+                        <tr><th>Footer Text</th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[footer_note]" value="<?php echo esc_attr( $opts['footer_note'] ); ?>" class="large-text"></td></tr>
                     </table>
                 </div>
             </div>
@@ -304,23 +306,23 @@ function kwl_maint_settings_page() {
                 <div class="kwl-card">
                     <h2>&#x270F;&#xFE0F; Portfolio Template - Text</h2>
                     <table class="form-table">
-                        <tr><th>Name Badge</th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[portfolio_name_badge]" value="<?php echo esc_attr( $opts['portfolio_name_badge'] ); ?>" class="regular-text"></td></tr>
-                        <tr><th>Subheading</th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[portfolio_subhead]" value="<?php echo esc_attr( $opts['portfolio_subhead'] ); ?>" class="regular-text"></td></tr>
-                        <tr><th>Main Message</th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[portfolio_tagline]" value="<?php echo esc_attr( $opts['portfolio_tagline'] ); ?>" class="large-text"></td></tr>
-                        <tr><th>ETA / Status Text <span style="color:#888;font-size:11px;">(HTML ok)</span></th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[portfolio_eta_text]" value="<?php echo esc_attr( $opts['portfolio_eta_text'] ); ?>" class="large-text"></td></tr>
-                        <tr><th>Status Badge Text</th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[portfolio_status_badge]" value="<?php echo esc_attr( $opts['portfolio_status_badge'] ); ?>" class="large-text"></td></tr>
-                        <tr><th>Footer Text</th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[portfolio_footer_note]" value="<?php echo esc_attr( $opts['portfolio_footer_note'] ); ?>" class="large-text"></td></tr>
+                        <tr><th>Name Badge</th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[portfolio_name_badge]" value="<?php echo esc_attr( $opts['portfolio_name_badge'] ); ?>" class="regular-text"></td></tr>
+                        <tr><th>Subheading</th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[portfolio_subhead]" value="<?php echo esc_attr( $opts['portfolio_subhead'] ); ?>" class="regular-text"></td></tr>
+                        <tr><th>Main Message</th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[portfolio_tagline]" value="<?php echo esc_attr( $opts['portfolio_tagline'] ); ?>" class="large-text"></td></tr>
+                        <tr><th>ETA / Status Text <span style="color:#888;font-size:11px;">(HTML ok)</span></th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[portfolio_eta_text]" value="<?php echo esc_attr( $opts['portfolio_eta_text'] ); ?>" class="large-text"></td></tr>
+                        <tr><th>Status Badge Text</th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[portfolio_status_badge]" value="<?php echo esc_attr( $opts['portfolio_status_badge'] ); ?>" class="large-text"></td></tr>
+                        <tr><th>Footer Text</th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[portfolio_footer_note]" value="<?php echo esc_attr( $opts['portfolio_footer_note'] ); ?>" class="large-text"></td></tr>
                     </table>
                 </div>
                 <div class="kwl-card">
                     <h2>&#x1F517; Custom Link Block</h2>
                     <table class="form-table">
                         <tr><th>Show Link Block</th><td>
-                            <label class="kwl-toggle"><input type="checkbox" name="<?php echo KWL_MAINT_OPTIONS; ?>[show_custom_link]" value="1" <?php checked( $opts['show_custom_link'], '1' ); ?>><span class="kwl-toggle-slider"></span></label>
+                            <label class="kwl-toggle"><input type="checkbox" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[show_custom_link]" value="1" <?php checked( $opts['show_custom_link'], '1' ); ?>><span class="kwl-toggle-slider"></span></label>
                         </td></tr>
-                        <tr><th>Intro Text</th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[custom_link_intro]" value="<?php echo esc_attr( $opts['custom_link_intro'] ); ?>" class="large-text"></td></tr>
-                        <tr><th>Button Label</th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[custom_link_label]" value="<?php echo esc_attr( $opts['custom_link_label'] ); ?>" class="regular-text"></td></tr>
-                        <tr><th>Button URL</th><td><input type="text" name="<?php echo KWL_MAINT_OPTIONS; ?>[custom_link_url]" value="<?php echo esc_attr( $opts['custom_link_url'] ); ?>" class="regular-text" placeholder="/resume or https://..."></td></tr>
+                        <tr><th>Intro Text</th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[custom_link_intro]" value="<?php echo esc_attr( $opts['custom_link_intro'] ); ?>" class="large-text"></td></tr>
+                        <tr><th>Button Label</th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[custom_link_label]" value="<?php echo esc_attr( $opts['custom_link_label'] ); ?>" class="regular-text"></td></tr>
+                        <tr><th>Button URL</th><td><input type="text" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[custom_link_url]" value="<?php echo esc_attr( $opts['custom_link_url'] ); ?>" class="regular-text" placeholder="/resume or https://..."></td></tr>
                     </table>
                 </div>
             </div>
@@ -349,7 +351,7 @@ function kwl_maint_settings_page() {
                         <tr>
                             <th><?php echo esc_html( $l ); ?></th>
                             <td>
-                                <input type="color" name="<?php echo KWL_MAINT_OPTIONS; ?>[<?php echo esc_attr( $k ); ?>]" value="<?php echo esc_attr( $opts[ $k ] ); ?>" class="kwl-color">
+                                <input type="color" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[<?php echo esc_attr( $k ); ?>]" value="<?php echo esc_attr( $opts[ $k ] ); ?>" class="kwl-color">
                                 <input type="text" class="kwl-hex" value="<?php echo esc_attr( $opts[ $k ] ); ?>" readonly>
                             </td>
                         </tr>
@@ -376,7 +378,7 @@ function kwl_maint_settings_page() {
                         <tr>
                             <th><?php echo esc_html( $l ); ?></th>
                             <td>
-                                <input type="color" name="<?php echo KWL_MAINT_OPTIONS; ?>[<?php echo esc_attr( $k ); ?>]" value="<?php echo esc_attr( $opts[ $k ] ); ?>" class="kwl-color">
+                                <input type="color" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[<?php echo esc_attr( $k ); ?>]" value="<?php echo esc_attr( $opts[ $k ] ); ?>" class="kwl-color">
                                 <input type="text" class="kwl-hex" value="<?php echo esc_attr( $opts[ $k ] ); ?>" readonly>
                             </td>
                         </tr>
@@ -391,15 +393,15 @@ function kwl_maint_settings_page() {
                     <h2>&#x1F517; Contact &amp; Social Links <span style="color:#888;font-size:12px;font-weight:400;">(Business template)</span></h2>
                     <table class="form-table">
                         <tr><th>Support Email</th><td>
-                            <input type="email" name="<?php echo KWL_MAINT_OPTIONS; ?>[support_email]" value="<?php echo esc_attr( $opts['support_email'] ); ?>" class="regular-text">
-                            <label style="margin-left:10px;"><input type="checkbox" name="<?php echo KWL_MAINT_OPTIONS; ?>[show_email_link]" value="1" <?php checked( $opts['show_email_link'], '1' ); ?>> Show</label>
+                            <input type="email" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[support_email]" value="<?php echo esc_attr( $opts['support_email'] ); ?>" class="regular-text">
+                            <label style="margin-left:10px;"><input type="checkbox" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[show_email_link]" value="1" <?php checked( $opts['show_email_link'], '1' ); ?>> Show</label>
                         </td></tr>
                         <tr><th>Facebook Page URL</th><td>
-                            <input type="url" name="<?php echo KWL_MAINT_OPTIONS; ?>[facebook_url]" value="<?php echo esc_attr( $opts['facebook_url'] ); ?>" class="regular-text">
-                            <label style="margin-left:10px;"><input type="checkbox" name="<?php echo KWL_MAINT_OPTIONS; ?>[show_fb_link]" value="1" <?php checked( $opts['show_fb_link'], '1' ); ?>> Show</label>
+                            <input type="url" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[facebook_url]" value="<?php echo esc_attr( $opts['facebook_url'] ); ?>" class="regular-text">
+                            <label style="margin-left:10px;"><input type="checkbox" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[show_fb_link]" value="1" <?php checked( $opts['show_fb_link'], '1' ); ?>> Show</label>
                         </td></tr>
                         <tr><th>"Check Status" Button</th><td>
-                            <label><input type="checkbox" name="<?php echo KWL_MAINT_OPTIONS; ?>[show_status_btn]" value="1" <?php checked( $opts['show_status_btn'], '1' ); ?>> Show</label>
+                            <label><input type="checkbox" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[show_status_btn]" value="1" <?php checked( $opts['show_status_btn'], '1' ); ?>> Show</label>
                         </td></tr>
                     </table>
                 </div>
@@ -410,8 +412,8 @@ function kwl_maint_settings_page() {
                 <div class="kwl-card">
                     <h2>&#x1F510; Bypass Roles</h2>
                     <table class="form-table">
-                        <tr><th>Administrators</th><td><label><input type="checkbox" name="<?php echo KWL_MAINT_OPTIONS; ?>[bypass_admins]" value="1" <?php checked( $opts['bypass_admins'], '1' ); ?>> Always see the live site</label></td></tr>
-                        <tr><th>Editors</th><td><label><input type="checkbox" name="<?php echo KWL_MAINT_OPTIONS; ?>[bypass_editors]" value="1" <?php checked( $opts['bypass_editors'], '1' ); ?>> Can bypass</label></td></tr>
+                        <tr><th>Administrators</th><td><label><input type="checkbox" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[bypass_admins]" value="1" <?php checked( $opts['bypass_admins'], '1' ); ?>> Always see the live site</label></td></tr>
+                        <tr><th>Editors</th><td><label><input type="checkbox" name="<?php echo esc_attr( KWL_MAINT_OPTIONS ); ?>[bypass_editors]" value="1" <?php checked( $opts['bypass_editors'], '1' ); ?>> Can bypass</label></td></tr>
                     </table>
                 </div>
                 <div class="kwl-card">

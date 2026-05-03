@@ -1,10 +1,11 @@
 === KWL Maintenance Mode ===
-Contributors: Ken Weill
+Contributors: kenweill
 Tags: maintenance, under construction, coming soon
 Requires at least: 6.0
 Tested up to: 6.9.4
-Stable tag: 2.1.5
+Stable tag: 2.1.6
 License: GPL-2.0+
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 A fully customizable maintenance/under-construction page with two built-in templates.
 
@@ -43,6 +44,12 @@ and offline use.
 4. Pick a mode, pick a template, customize, done
 
 == Changelog ==
+
+= 2.1.6 =
+* Fix: Contributors field updated to use wordpress.org username
+* Fix: Added License URI to plugin header and readme
+* Fix: Added Text Domain to plugin header
+* Fix: All admin form name attributes now properly escaped with esc_attr()
 
 = 2.1.5 =
 * Improvement: Robots meta tag is now set automatically based on the selected mode.
