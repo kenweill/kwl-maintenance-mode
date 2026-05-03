@@ -2,8 +2,8 @@
 Contributors: kenweill
 Tags: maintenance, under construction, coming soon
 Requires at least: 6.0
-Tested up to: 6.9.4
-Stable tag: 2.1.6
+Tested up to: 6.9
+Stable tag: 2.1.7
 License: GPL-2.0+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,8 +33,8 @@ Customize everything:
 * Role-based bypass (admins, editors)
 * SEO robots meta tag
 
-No external icon CDN — icons are self-hosted inside the plugin for privacy compliance
-and offline use.
+No external dependencies — icons are inline SVG, fonts use the system font stack. Privacy-friendly
+and works fully offline.
 
 == Installation ==
 
@@ -44,6 +44,16 @@ and offline use.
 4. Pick a mode, pick a template, customize, done
 
 == Changelog ==
+
+= 2.1.7 =
+* Fix: Escaped all unescaped output in admin page (pill label, version constant, icon select labels)
+* Fix: Replaced parse_url() with wp_parse_url() in front-end intercept
+* Fix: Added nonce verification to kwl_preview GET parameter
+* Fix: Removed Google Fonts CDN and Font Awesome CDN (offloaded content policy)
+* Fix: Switched to inline SVG icons — no external dependencies, privacy-friendly, works offline
+* Fix: Switched to system font stack — no external font loading
+* Fix: Escaped inline CSS output via wp_strip_all_tags()
+* Fix: Updated readme.txt Tested up to field to major version only (6.9)
 
 = 2.1.6 =
 * Fix: Contributors field updated to use wordpress.org username
