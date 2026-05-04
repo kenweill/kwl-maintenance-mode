@@ -94,7 +94,7 @@ Everyone else — guests and lower-role users — will see the maintenance page 
 ## 🗂️ File Structure
 
 ```
-kwl-maintenance/
+kwl-maintenance-mode/
 ├── kwl-maintenance.php   # Main plugin file (all logic + front-end templates)
 └── readme.txt            # WordPress.org readme format
 ```
