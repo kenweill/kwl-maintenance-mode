@@ -3,7 +3,7 @@
  * Plugin Name: KWL Maintenance Mode
  * Plugin URI:  https://github.com/kenweill/kwl-maintenance-mode
  * Description: A fully customizable maintenance/under-construction page with two built-in templates.
- * Version:     2.1.7
+ * Version:     2.1.8
  * Author:      Ken Weill
  * Author URI:  https://github.com/kenweill
  * License:     GPL-2.0+
@@ -13,7 +13,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'KWL_MAINT_VERSION', '2.1.7' );
+define( 'KWL_MAINT_VERSION', '2.1.8' );
 define( 'KWL_MAINT_OPTIONS', 'kwl_maintenance_options' );
 
 /* ---------------------------------------------------------------
@@ -88,6 +88,76 @@ function kwl_maint_activate() {
    ADMIN MENU
 --------------------------------------------------------------- */
 add_action( 'admin_menu', 'kwl_maint_add_menu' );
+add_action( 'admin_enqueue_scripts', 'kwl_maint_enqueue_admin_assets' );
+function kwl_maint_enqueue_admin_assets( $hook ) {
+    if ( $hook !== 'settings_page_kwl-maintenance' ) return;
+
+    wp_register_style( 'kwl-maint-admin', false, array(), KWL_MAINT_VERSION ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+    wp_enqueue_style( 'kwl-maint-admin' );
+    wp_add_inline_style( 'kwl-maint-admin', '
+        .kwl-wrap { max-width:940px; }
+        .kwl-pill { font-size:12px;padding:4px 12px;border-radius:20px;font-weight:600; }
+        .kwl-pill.active      { background:#d4edda;color:#155724; }
+        .kwl-pill.coming-soon { background:#d1ecf1;color:#0c5460; }
+        .kwl-pill.inactive    { background:#e2e3e5;color:#383d41; }
+        .kwl-vpill { font-size:11px;padding:3px 10px;border-radius:20px;background:#f0f0f0;color:#666;font-weight:500; }
+        .kwl-card { background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:20px 24px;margin-bottom:16px; }
+        .kwl-card h2 { font-size:15px;margin:0 0 16px;padding:0;border:none; }
+        .kwl-3col,.kwl-2col { display:flex;gap:12px;flex-wrap:wrap;margin-top:8px; }
+        .kwl-optcard { flex:1;min-width:160px;border:2px solid #e0e0e0;border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:5px; }
+        .kwl-optcard input[type=radio] { display:none; }
+        .kwl-optcard:hover { border-color:#a0b4c8; }
+        .kwl-optcard.sel { border-color:#2271b1;background:#f0f6fc; }
+        .kwl-oc-icon { font-size:1.4rem; }
+        .kwl-oc-label { font-weight:700;font-size:14px;color:#1d2327; }
+        .kwl-oc-desc { font-size:12px;color:#666;line-height:1.4; }
+        .kwl-oc-desc code { background:#eee;padding:1px 5px;border-radius:3px;font-size:11px; }
+        .kwl-tpl-preview { border-radius:10px;padding:12px;text-align:center;min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;margin-bottom:4px; }
+        .kwl-tabs { display:flex;gap:4px;border-bottom:2px solid #e0e0e0;margin:20px 0;flex-wrap:wrap; }
+        .kwl-tab { background:none;border:none;padding:10px 16px;cursor:pointer;font-size:13px;font-weight:500;color:#555;border-bottom:2px solid transparent;margin-bottom:-2px;border-radius:4px 4px 0 0;transition:all .15s; }
+        .kwl-tab:hover { background:#f5f5f5;color:#1d2327; }
+        .kwl-tab-active { background:#fff!important;color:#2271b1!important;border-bottom-color:#2271b1!important;border:1px solid #e0e0e0;border-bottom:2px solid #fff; }
+        .kwl-panel { display:none; }
+        .kwl-panel-active { display:block; }
+        .kwl-toggle { position:relative;display:inline-block;width:44px;height:24px; }
+        .kwl-toggle input { opacity:0;width:0;height:0; }
+        .kwl-toggle-slider { position:absolute;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:24px;transition:.3s;cursor:pointer; }
+        .kwl-toggle-slider:before { content:"";position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s; }
+        .kwl-toggle input:checked + .kwl-toggle-slider { background:#2271b1; }
+        .kwl-toggle input:checked + .kwl-toggle-slider:before { transform:translateX(20px); }
+        .kwl-color { width:44px;height:32px;border:1px solid #ddd;border-radius:4px;padding:2px;cursor:pointer;vertical-align:middle; }
+        .kwl-hex { width:80px;margin-left:8px;font-family:monospace;font-size:12px;vertical-align:middle; }
+    ' );
+
+    wp_register_script( 'kwl-maint-admin', false, array(), KWL_MAINT_VERSION, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+    wp_enqueue_script( 'kwl-maint-admin' );
+    wp_add_inline_script( 'kwl-maint-admin', '
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".kwl-tab").forEach(function(tab) {
+                tab.addEventListener("click", function() {
+                    document.querySelectorAll(".kwl-tab").forEach(function(t) { t.classList.remove("kwl-tab-active"); });
+                    document.querySelectorAll(".kwl-panel").forEach(function(p) { p.classList.remove("kwl-panel-active"); });
+                    tab.classList.add("kwl-tab-active");
+                    document.getElementById("kwl-tab-" + tab.dataset.tab).classList.add("kwl-panel-active");
+                });
+            });
+            document.querySelectorAll(".kwl-optcard").forEach(function(card) {
+                card.addEventListener("click", function() {
+                    var group = card.closest(".kwl-3col, .kwl-2col");
+                    if (group) group.querySelectorAll(".kwl-optcard").forEach(function(c) { c.classList.remove("sel"); });
+                    card.classList.add("sel");
+                    card.querySelector("input[type=radio]").checked = true;
+                });
+            });
+            document.querySelectorAll(".kwl-color").forEach(function(picker) {
+                picker.addEventListener("input", function() {
+                    picker.nextElementSibling.value = picker.value;
+                });
+            });
+        });
+    ' );
+}
+
 function kwl_maint_add_menu() {
     add_options_page( 'KWL Maintenance', 'KWL Maintenance', 'manage_options', 'kwl-maintenance', 'kwl_maint_settings_page' );
 }
@@ -106,10 +176,10 @@ function kwl_maint_sanitize( $input ) {
 
     $text_fields = array(
         'site_name', 'icon', 'tagline', 'eta_text', 'status_badge_text', 'support_note',
-        'footer_note', 'support_email', 'facebook_url', 'meta_robots',
+        'footer_note', 'meta_robots',
         'portfolio_name_badge', 'portfolio_subhead', 'portfolio_tagline',
         'portfolio_status_badge', 'portfolio_eta_text', 'portfolio_footer_note',
-        'custom_link_url', 'custom_link_label', 'custom_link_intro',
+        'custom_link_label', 'custom_link_intro',
     );
     $hex_fields = array(
         'color_bg_from', 'color_bg_to', 'color_card_bg', 'color_title', 'color_title_to',
@@ -127,6 +197,9 @@ function kwl_maint_sanitize( $input ) {
     foreach ( $text_fields as $f ) {
         $clean[ $f ] = isset( $input[ $f ] ) ? wp_kses_post( $input[ $f ] ) : $defaults[ $f ];
     }
+    $clean['support_email']   = isset( $input['support_email'] )   ? sanitize_email( $input['support_email'] )     : $defaults['support_email'];
+    $clean['facebook_url']    = isset( $input['facebook_url'] )    ? esc_url_raw( $input['facebook_url'] )         : $defaults['facebook_url'];
+    $clean['custom_link_url'] = isset( $input['custom_link_url'] ) ? esc_url_raw( $input['custom_link_url'] )      : $defaults['custom_link_url'];
     foreach ( $hex_fields as $f ) {
         $v = isset( $input[ $f ] ) ? sanitize_hex_color( $input[ $f ] ) : '';
         $clean[ $f ] = $v ? $v : $defaults[ $f ];
@@ -472,65 +545,6 @@ function kwl_maint_settings_page() {
         </form>
     </div>
 
-    <style>
-    .kwl-wrap { max-width:940px; }
-    .kwl-pill { font-size:12px;padding:4px 12px;border-radius:20px;font-weight:600; }
-    .kwl-pill.active      { background:#d4edda;color:#155724; }
-    .kwl-pill.coming-soon { background:#d1ecf1;color:#0c5460; }
-    .kwl-pill.inactive    { background:#e2e3e5;color:#383d41; }
-    .kwl-vpill { font-size:11px;padding:3px 10px;border-radius:20px;background:#f0f0f0;color:#666;font-weight:500; }
-    .kwl-card { background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:20px 24px;margin-bottom:16px; }
-    .kwl-card h2 { font-size:15px;margin:0 0 16px;padding:0;border:none; }
-    .kwl-3col,.kwl-2col { display:flex;gap:12px;flex-wrap:wrap;margin-top:8px; }
-    .kwl-optcard { flex:1;min-width:160px;border:2px solid #e0e0e0;border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:5px; }
-    .kwl-optcard input[type=radio] { display:none; }
-    .kwl-optcard:hover { border-color:#a0b4c8; }
-    .kwl-optcard.sel { border-color:#2271b1;background:#f0f6fc; }
-    .kwl-oc-icon { font-size:1.4rem; }
-    .kwl-oc-label { font-weight:700;font-size:14px;color:#1d2327; }
-    .kwl-oc-desc { font-size:12px;color:#666;line-height:1.4; }
-    .kwl-oc-desc code { background:#eee;padding:1px 5px;border-radius:3px;font-size:11px; }
-    .kwl-tpl-preview { border-radius:10px;padding:12px;text-align:center;min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;margin-bottom:4px; }
-    .kwl-tabs { display:flex;gap:4px;border-bottom:2px solid #e0e0e0;margin:20px 0;flex-wrap:wrap; }
-    .kwl-tab { background:none;border:none;padding:10px 16px;cursor:pointer;font-size:13px;font-weight:500;color:#555;border-bottom:2px solid transparent;margin-bottom:-2px;border-radius:4px 4px 0 0;transition:all .15s; }
-    .kwl-tab:hover { background:#f5f5f5;color:#1d2327; }
-    .kwl-tab-active { background:#fff!important;color:#2271b1!important;border-bottom-color:#2271b1!important;border:1px solid #e0e0e0;border-bottom:2px solid #fff; }
-    .kwl-panel { display:none; }
-    .kwl-panel-active { display:block; }
-    .kwl-toggle { position:relative;display:inline-block;width:44px;height:24px; }
-    .kwl-toggle input { opacity:0;width:0;height:0; }
-    .kwl-toggle-slider { position:absolute;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:24px;transition:.3s;cursor:pointer; }
-    .kwl-toggle-slider:before { content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s; }
-    .kwl-toggle input:checked + .kwl-toggle-slider { background:#2271b1; }
-    .kwl-toggle input:checked + .kwl-toggle-slider:before { transform:translateX(20px); }
-    .kwl-color { width:44px;height:32px;border:1px solid #ddd;border-radius:4px;padding:2px;cursor:pointer;vertical-align:middle; }
-    .kwl-hex { width:80px;margin-left:8px;font-family:monospace;font-size:12px;vertical-align:middle; }
-    </style>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.kwl-tab').forEach(function(tab) {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.kwl-tab').forEach(function(t) { t.classList.remove('kwl-tab-active'); });
-                document.querySelectorAll('.kwl-panel').forEach(function(p) { p.classList.remove('kwl-panel-active'); });
-                tab.classList.add('kwl-tab-active');
-                document.getElementById('kwl-tab-' + tab.dataset.tab).classList.add('kwl-panel-active');
-            });
-        });
-        document.querySelectorAll('.kwl-optcard').forEach(function(card) {
-            card.addEventListener('click', function() {
-                var group = card.closest('.kwl-3col, .kwl-2col');
-                if (group) group.querySelectorAll('.kwl-optcard').forEach(function(c) { c.classList.remove('sel'); });
-                card.classList.add('sel');
-                card.querySelector('input[type=radio]').checked = true;
-            });
-        });
-        document.querySelectorAll('.kwl-color').forEach(function(picker) {
-            picker.addEventListener('input', function() {
-                picker.nextElementSibling.value = picker.value;
-            });
-        });
-    });
-    </script>
     <?php
 }
 

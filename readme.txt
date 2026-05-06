@@ -3,7 +3,7 @@ Contributors: kenweill
 Tags: maintenance, under construction, coming soon
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 2.1.7
+Stable tag: 2.1.8
 License: GPL-2.0+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,11 @@ and works fully offline.
 4. Pick a mode, pick a template, customize, done
 
 == Changelog ==
+
+= 2.1.8 =
+* Fix: Admin CSS and JS moved from inline output to wp_add_inline_style() and wp_add_inline_script() via admin_enqueue_scripts hook
+* Fix: support_email now sanitized with sanitize_email() instead of wp_kses_post()
+* Fix: facebook_url and custom_link_url now sanitized with esc_url_raw() instead of wp_kses_post()
 
 = 2.1.7 =
 * Fix: Escaped all unescaped output in admin page (pill label, version constant, icon select labels)
