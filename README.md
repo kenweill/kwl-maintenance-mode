@@ -127,13 +127,4 @@ See [CHANGELOG.md](CHANGELOG.md) for full version history.
 
 ---
 
-## 👤 Author
-
-**Ken Weill**
-- GitHub: [@kenweill](https://github.com/kenweill)
-- Facebook: [@KWLHub](https://www.facebook.com/KWLHub)
-- Email: support@kwlhub.com
-
----
-
 > Built with ❤️ as a free alternative to paid maintenance page plugins. No locked templates, no upsells — just a clean, customizable page that works.
