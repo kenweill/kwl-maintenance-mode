@@ -5,7 +5,6 @@
 ![WordPress](https://img.shields.io/badge/WordPress-6.9%2B-blue?logo=wordpress)
 ![PHP](https://img.shields.io/badge/PHP-8.3%2B-purple?logo=php)
 ![License](https://img.shields.io/badge/License-GPL--2.0%2B-green)
-![Version](https://img.shields.io/github/v/release/kenweill/kwl-maintenance-mode?label=Version&color=orange)
 
 ---
 
