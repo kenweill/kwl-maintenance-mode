@@ -1,11 +1,11 @@
 # 🔧 KWL Maintenance Mode — WordPress Plugin
 
-A free, fully customizable **maintenance / under-construction page** plugin for WordPress. No paywalls, no locked templates — everything is customizable right from your WordPress dashboard.
+> A free, fully customizable maintenance / under-construction page plugin for WordPress. No paywalls, no locked templates — everything is customizable right from your WordPress dashboard.
 
 ![WordPress](https://img.shields.io/badge/WordPress-6.9%2B-blue?logo=wordpress)
 ![PHP](https://img.shields.io/badge/PHP-8.3%2B-purple?logo=php)
 ![License](https://img.shields.io/badge/License-GPL--2.0%2B-green)
-![Version](https://img.shields.io/badge/Version-2.1.7-orange)
+![Version](https://img.shields.io/github/v/release/kenweill/kwl-maintenance-mode?label=Version&color=orange)
 
 ---
 
@@ -118,6 +118,12 @@ Contributions, issues, and feature requests are welcome!
 Distributed under the **GPL-2.0+** license. See [`LICENSE`](LICENSE) for more information.
 
 This license is required for WordPress plugins and means anyone can use, modify, and distribute this plugin freely — as long as they keep the same license.
+
+---
+
+## 📋 Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for full version history.
 
 ---
 
